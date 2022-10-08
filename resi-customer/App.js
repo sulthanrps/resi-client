@@ -1,20 +1,39 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import LandingPage from './screens/LandingPage';
+import Register from './screens/Register';
+import Login from './screens/Login';
+import Home from './screens/Home';
+import Profile from './screens/Profile/Profile';
+import TopUp from './screens/Profile/TopUp';
+import EditProfile from './screens/Profile/EditProfile';
+import DetailBook from './screens/Book/DetailBook';
+import CreateBook from './screens/Book/CreateBook';
+import LookingWasher from './screens/Book/BookFlow/LookingWasher';
+import BookTaken from './screens/Book/BookFlow/BookTaken';
+import WasherTracker from './screens/Book/BookFlow/WasherTracker';
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name='LandingPage' component={LandingPage}></Stack.Screen>
+        <Stack.Screen name='Register' component={Register}></Stack.Screen>
+        <Stack.Screen name='Login' component={Login}></Stack.Screen>
+        <Stack.Screen name='Home' component={Home}></Stack.Screen>
+        <Stack.Screen name='Profile' component={Profile}></Stack.Screen>
+        <Stack.Screen name='TopUp' component={TopUp}></Stack.Screen>
+        <Stack.Screen name='EditProfile' component={EditProfile}></Stack.Screen>
+        <Stack.Screen name='DetailBook' component={DetailBook}></Stack.Screen>
+        <Stack.Screen name='CreateBook' component={CreateBook}></Stack.Screen>
+        <Stack.Screen name='LookingWasher' component={LookingWasher}></Stack.Screen>
+        <Stack.Screen name='BookTaken' component={BookTaken}></Stack.Screen>
+        <Stack.Screen name='WasherTracker' component={WasherTracker}></Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
