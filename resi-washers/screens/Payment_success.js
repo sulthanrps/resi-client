@@ -33,7 +33,7 @@ import { useState, useEffect } from "react";
 
 const width = Dimensions.get("screen").width;
 const height = Dimensions.get("screen").height;
-export function Login_washer() {
+export function Payment_success() {
   let [fontsLoaded] = useFonts({
     Poppins_100Thin,
     Poppins_100Thin_Italic,
@@ -70,11 +70,11 @@ export function Login_washer() {
                 opacity: 0.6,
               }}
             >
-              Login
+              Home
             </Text>
           </View>
         </View>
-        <View style={styles.imageLogin}>
+        <View style={styles.bodyImage}>
           <Image
             style={{
               resizeMode: "contain",
@@ -83,41 +83,24 @@ export function Login_washer() {
               flex: 1,
             }}
             source={{
-              uri: "https://cdn.dribbble.com/users/542205/screenshots/5380805/media/71dcfb8fa5ef0c6f5459aa77f100fb7a.png?compress=1&resize=1000x750&vertical=top",
+              uri: "https://myps.ps/wp-content/uploads/2022/01/undraw_Accept_terms_re_lj38.png",
             }}
           />
         </View>
-        <View style={styles.labelEmail}>
+        <View style={styles.bodyMessage}>
           <Text
             style={{
               fontFamily: "Poppins_400Regular",
               fontWeight: "bold",
-              fontSize: 20,
+              fontSize: 32,
             }}
           >
-            Email
+            Payment Success !
           </Text>
-        </View>
-        <View style={styles.inputEmail}>
-          <Input></Input>
-        </View>
-        <View style={styles.labelPassword}>
-          <Text
-            style={{
-              fontFamily: "Poppins_400Regular",
-              fontWeight: "bold",
-              fontSize: 20,
-            }}
-          >
-            Password
-          </Text>
-        </View>
-        <View style={styles.inputPassword}>
-          <Input></Input>
         </View>
 
         <View style={styles.buttonLogin_washer}>
-          <Button title="Log in" />
+          <Button title="Go To Home" />
         </View>
       </View>
     </SafeAreaView>
@@ -138,8 +121,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     borderRadius: 10,
   },
-  imageLogin: {
-    flex: 8,
+  bodyImage: {
+    flex: 7,
     backgroundColor: "grey",
     borderRadius: 10,
     marginHorizontal: 10,
@@ -148,29 +131,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     resizeMode: "contain",
   },
-  labelEmail: {
-    flex: 1,
-    justifyContent: "flex-end",
-    marginHorizontal: 10,
-  },
-  inputEmail: {
-    flex: 1,
-    elevation: 2,
-    marginHorizontal: 10,
-  },
-  labelPassword: {
-    flex: 1,
-    justifyContent: "flex-end",
-    marginHorizontal: 10,
-  },
-  inputPassword: {
-    flex: 1,
-    elevation: 2,
+  bodyMessage: {
+    flex: 2,
+    justifyContent: "center",
+    alignItems: "center",
     marginHorizontal: 10,
   },
 
   buttonLogin_washer: {
-    flex: 1,
+    flex: 2,
     marginHorizontal: 10,
     marginTop: 10,
   },
