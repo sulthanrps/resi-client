@@ -74,6 +74,9 @@ export function BookTaken() {
         <View style={styles.buttonRegister}>
           <Button title="Submit" />
         </View>
+        <View style={styles.inputAddress}>
+          <Text>input coba</Text>
+        </View>
       </View>
     </SafeAreaView>
   );
