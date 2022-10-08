@@ -4,10 +4,9 @@ import {
   View,
   Dimensions,
   ActivityIndicator,
-  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Input, Button } from "@rneui/themed";
+import { Button, Icon } from "@rneui/themed";
 import {
   useFonts,
   Poppins_100Thin,
@@ -29,11 +28,10 @@ import {
   Poppins_900Black,
   Poppins_900Black_Italic,
 } from "@expo-google-fonts/poppins";
-import { useState, useEffect } from "react";
 
 const width = Dimensions.get("screen").width;
 const height = Dimensions.get("screen").height;
-export function Login_washer() {
+export function Profile_washer() {
   let [fontsLoaded] = useFonts({
     Poppins_100Thin,
     Poppins_100Thin_Italic,
@@ -70,24 +68,14 @@ export function Login_washer() {
                 opacity: 0.6,
               }}
             >
-              Login
+              Home
             </Text>
           </View>
         </View>
-        <View style={styles.imageLogin}>
-          <Image
-            style={{
-              resizeMode: "contain",
-              height: 600,
-              width: 600,
-              flex: 1,
-            }}
-            source={{
-              uri: "https://cdn.dribbble.com/users/542205/screenshots/5380805/media/71dcfb8fa5ef0c6f5459aa77f100fb7a.png?compress=1&resize=1000x750&vertical=top",
-            }}
-          />
+        <View style={styles.divProfile}>
+          <View style={styles.photoProfile}></View>
         </View>
-        <View style={styles.labelEmail}>
+        <View style={styles.username}>
           <Text
             style={{
               fontFamily: "Poppins_400Regular",
@@ -95,29 +83,73 @@ export function Login_washer() {
               fontSize: 20,
             }}
           >
-            Email
+            Asep
           </Text>
-        </View>
-        <View style={styles.inputEmail}>
-          <Input></Input>
-        </View>
-        <View style={styles.labelPassword}>
           <Text
             style={{
               fontFamily: "Poppins_400Regular",
               fontWeight: "bold",
               fontSize: 20,
+              opacity: 0.6,
             }}
           >
-            Password
+            {"  "}(Washer)
           </Text>
         </View>
-        <View style={styles.inputPassword}>
-          <Input></Input>
+        <View style={styles.buttonBalance}>
+          <Icon name="credit-card" type="font-awesome" color={"white"} />
+          <Text
+            style={{
+              fontFamily: "Poppins_400Regular",
+              fontWeight: "bold",
+              fontSize: 20,
+              color: "white",
+            }}
+          >
+            {"  "}Balance :{"  "}
+          </Text>
+          <Text
+            style={{
+              fontFamily: "Poppins_400Regular",
+              fontWeight: "bold",
+              fontSize: 20,
+              color: "white",
+            }}
+          >
+            Rp. 100.000,-
+          </Text>
         </View>
-
+        <View style={styles.bodyaddress}>
+          <Text
+            style={{
+              fontFamily: "Poppins_400Regular",
+              fontWeight: "bold",
+              fontSize: 20,
+              opacity: 0.6,
+            }}
+          >
+            Address :
+          </Text>
+          <Text style={{ opacity: 0.6 }}>
+            Jalan Perdamaian anti huru hara Block ABCDEF RT Pak Amin Tetangga
+          </Text>
+        </View>
+        <View style={styles.phoneNumber}>
+          <Text
+            style={{
+              fontFamily: "Poppins_400Regular",
+              fontWeight: "bold",
+              fontSize: 20,
+              opacity: 0.6,
+            }}
+          >
+            Phone Number
+          </Text>
+          <Text style={{ opacity: 0.6 }}>0812345678</Text>
+        </View>
+        <View style={styles.blankbody}></View>
         <View style={styles.buttonLogin_washer}>
-          <Button title="Log in" />
+          <Button title="Edit Profile" />
         </View>
       </View>
     </SafeAreaView>
@@ -138,37 +170,53 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     borderRadius: 10,
   },
-  imageLogin: {
-    flex: 8,
-    backgroundColor: "grey",
-    borderRadius: 10,
-    marginHorizontal: 10,
-    marginTop: 20,
+  divProfile: {
+    flex: 2,
     justifyContent: "center",
     alignItems: "center",
+  },
+  photoProfile: {
+    backgroundColor: "grey",
+    marginHorizontal: 10,
+    marginTop: 20,
     resizeMode: "contain",
+    height: 55,
+    width: 55,
+    borderRadius: 44 / 2,
   },
-  labelEmail: {
+  username: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 10,
+    flexDirection: "row",
+  },
+  buttonBalance: {
+    // flex: 1,
+    backgroundColor: "#5575F9",
+    marginHorizontal: 10,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  bodyaddress: {
+    // flex: 1,
+    height: 70,
     justifyContent: "flex-end",
     marginHorizontal: 10,
+    marginTop: 5,
   },
-  inputEmail: {
-    flex: 1,
-    elevation: 2,
+  phoneNumber: {
+    // flex: 1,
+    height: 80,
     marginHorizontal: 10,
-  },
-  labelPassword: {
-    flex: 1,
     justifyContent: "flex-end",
+  },
+  blankbody: {
+    flex: 6,
     marginHorizontal: 10,
   },
-  inputPassword: {
-    flex: 1,
-    elevation: 2,
-    marginHorizontal: 10,
-  },
-
   buttonLogin_washer: {
     flex: 1,
     marginHorizontal: 10,

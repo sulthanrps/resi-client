@@ -33,7 +33,7 @@ import { useState, useEffect } from "react";
 
 const width = Dimensions.get("screen").width;
 const height = Dimensions.get("screen").height;
-export function Login_washer() {
+export function Edit_profile_washer() {
   let [fontsLoaded] = useFonts({
     Poppins_100Thin,
     Poppins_100Thin_Italic,
@@ -70,24 +70,25 @@ export function Login_washer() {
                 opacity: 0.6,
               }}
             >
-              Login
+              Edit Profile
             </Text>
           </View>
         </View>
-        <View style={styles.imageLogin}>
-          <Image
-            style={{
-              resizeMode: "contain",
-              height: 600,
-              width: 600,
-              flex: 1,
-            }}
-            source={{
-              uri: "https://cdn.dribbble.com/users/542205/screenshots/5380805/media/71dcfb8fa5ef0c6f5459aa77f100fb7a.png?compress=1&resize=1000x750&vertical=top",
-            }}
-          />
+        <View style={styles.divProfile}>
+          <View style={styles.photoProfile}>
+            <Image
+              style={{
+                resizeMode: "contain",
+                flex: 1,
+                borderRadius: 10,
+              }}
+              source={{
+                uri: "https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_0.jpg",
+              }}
+            />
+          </View>
         </View>
-        <View style={styles.labelEmail}>
+        <View style={styles.labelName}>
           <Text
             style={{
               fontFamily: "Poppins_400Regular",
@@ -95,11 +96,12 @@ export function Login_washer() {
               fontSize: 20,
             }}
           >
-            Email
+            Name
           </Text>
         </View>
-        <View style={styles.inputEmail}>
-          <Input></Input>
+        <View style={styles.inputName}>
+          {/* <Text>input Name</Text> */}
+          <Input placeholder="Asep Gigi"></Input>
         </View>
         <View style={styles.labelPassword}>
           <Text
@@ -113,11 +115,38 @@ export function Login_washer() {
           </Text>
         </View>
         <View style={styles.inputPassword}>
-          <Input></Input>
+          <Input placeholder="*******"></Input>
         </View>
-
-        <View style={styles.buttonLogin_washer}>
-          <Button title="Log in" />
+        <View style={styles.labelPhoneNumber}>
+          <Text
+            style={{
+              fontFamily: "Poppins_400Regular",
+              fontWeight: "bold",
+              fontSize: 20,
+            }}
+          >
+            Phone Number
+          </Text>
+        </View>
+        <View style={styles.inputPhoneNumber}>
+          <Input placeholder="081234567"></Input>
+        </View>
+        <View style={styles.labelAddress}>
+          <Text
+            style={{
+              fontFamily: "Poppins_400Regular",
+              fontWeight: "bold",
+              fontSize: 20,
+            }}
+          >
+            Address
+          </Text>
+        </View>
+        <View style={styles.inputAddress}>
+          <Input multiline placeholder="Jalan-jalan"></Input>
+        </View>
+        <View style={styles.buttonRegister}>
+          <Button title="Submit" />
         </View>
       </View>
     </SafeAreaView>
@@ -138,25 +167,28 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     borderRadius: 10,
   },
-  imageLogin: {
-    flex: 8,
-    backgroundColor: "grey",
-    borderRadius: 10,
-    marginHorizontal: 10,
-    marginTop: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    resizeMode: "contain",
-  },
-  labelEmail: {
+  labelName: {
     flex: 1,
     justifyContent: "flex-end",
     marginHorizontal: 10,
   },
-  inputEmail: {
+  inputName: {
     flex: 1,
     elevation: 2,
+  },
+  divProfile: {
+    flex: 2,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  photoProfile: {
+    backgroundColor: "grey",
     marginHorizontal: 10,
+    marginTop: 20,
+    resizeMode: "contain",
+    height: 55,
+    width: 55,
+    borderRadius: 44 / 2,
   },
   labelPassword: {
     flex: 1,
@@ -166,10 +198,26 @@ const styles = StyleSheet.create({
   inputPassword: {
     flex: 1,
     elevation: 2,
+  },
+  labelPhoneNumber: {
+    flex: 1,
+    justifyContent: "flex-end",
     marginHorizontal: 10,
   },
-
-  buttonLogin_washer: {
+  inputPhoneNumber: {
+    flex: 1,
+    elevation: 2,
+  },
+  labelAddress: {
+    flex: 1,
+    justifyContent: "flex-end",
+    marginHorizontal: 10,
+  },
+  inputAddress: {
+    flex: 2,
+    elevation: 2,
+  },
+  buttonRegister: {
     flex: 1,
     marginHorizontal: 10,
     marginTop: 10,
