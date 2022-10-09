@@ -5,6 +5,7 @@ import { Login_washer } from "./screens/Login_washer";
 import { Profile_washer } from "./screens/Profile_washer";
 import { Edit_profile_washer } from "./screens/Edit_profile_washer";
 import { Payment_success } from "./screens/Payment_success";
+import { QR_payment } from "./screens/QR_payment";
 
 export default function App() {
   return (
@@ -13,7 +14,8 @@ export default function App() {
       {/* <Login_washer></Login_washer> */}
       {/* <Profile_washer></Profile_washer> */}
       {/* <Edit_profile_washer></Edit_profile_washer> */}
-      <Payment_success></Payment_success>
+      {/* <Payment_success></Payment_success> */}
+      <QR_payment></QR_payment>
     </View>
   );
 }
