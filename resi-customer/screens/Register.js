@@ -82,7 +82,7 @@ export default function Register({navigation}){
         </View>
 
         <View style={styles.btnSection}>
-          <TouchableOpacity style={styles.startBtn} onPress={() => navigation.navigate('Home')}>
+          <TouchableOpacity style={styles.startBtn} onPress={() => navigation.navigate('Login')}>
               <Text style={styles.btnText}>Register</Text>
           </TouchableOpacity>
         </View>
@@ -142,9 +142,9 @@ const styles = StyleSheet.create({
       width: '100%',
       alignContent: 'center',
       alignItems: 'center',
-      marginTop: 20
+      marginTop: 10
     },
     inputFormContainer : {
-      marginBottom: 10
+      marginBottom: 20
     }
 });
