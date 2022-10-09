@@ -80,7 +80,9 @@ export function Edit_profile_washer() {
               style={{
                 resizeMode: "contain",
                 flex: 1,
-                borderRadius: 10,
+                height: 110,
+                width: 110,
+                borderRadius: 110 / 2,
               }}
               source={{
                 uri: "https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_0.jpg",
@@ -102,6 +104,20 @@ export function Edit_profile_washer() {
         <View style={styles.inputName}>
           {/* <Text>input Name</Text> */}
           <Input placeholder="Asep Gigi"></Input>
+        </View>
+        <View style={styles.labelEmail}>
+          <Text
+            style={{
+              fontFamily: "Poppins_400Regular",
+              fontWeight: "bold",
+              fontSize: 20,
+            }}
+          >
+            Email
+          </Text>
+        </View>
+        <View style={styles.inputEmail}>
+          <Input multiline placeholder="test@gmail.com"></Input>
         </View>
         <View style={styles.labelPassword}>
           <Text
@@ -131,7 +147,7 @@ export function Edit_profile_washer() {
         <View style={styles.inputPhoneNumber}>
           <Input placeholder="081234567"></Input>
         </View>
-        <View style={styles.labelAddress}>
+        <View style={styles.labelImgUrl}>
           <Text
             style={{
               fontFamily: "Poppins_400Regular",
@@ -139,11 +155,11 @@ export function Edit_profile_washer() {
               fontSize: 20,
             }}
           >
-            Address
+            Image Profile Url
           </Text>
         </View>
-        <View style={styles.inputAddress}>
-          <Input multiline placeholder="Jalan-jalan"></Input>
+        <View style={styles.inputImgProfileUrl}>
+          <Input placeholder="http://mariejoa.com"></Input>
         </View>
         <View style={styles.buttonRegister}>
           <Button title="Submit" />
@@ -186,9 +202,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginTop: 20,
     resizeMode: "contain",
-    height: 55,
-    width: 55,
-    borderRadius: 44 / 2,
+    height: 110,
+    width: 110,
+    borderRadius: 110 / 2,
   },
   labelPassword: {
     flex: 1,
@@ -208,13 +224,22 @@ const styles = StyleSheet.create({
     flex: 1,
     elevation: 2,
   },
-  labelAddress: {
+  labelEmail: {
     flex: 1,
     justifyContent: "flex-end",
     marginHorizontal: 10,
   },
-  inputAddress: {
-    flex: 2,
+  inputEmail: {
+    flex: 1,
+    elevation: 2,
+  },
+  labelImgUrl: {
+    flex: 1,
+    justifyContent: "flex-end",
+    marginHorizontal: 10,
+  },
+  inputImgProfileUrl: {
+    flex: 1,
     elevation: 2,
   },
   buttonRegister: {
