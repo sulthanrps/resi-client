@@ -130,7 +130,20 @@ export function Register() {
         <View style={styles.inputPhoneNumber}>
           <Input></Input>
         </View>
-
+        <View style={styles.labelImgUrl}>
+          <Text
+            style={{
+              fontFamily: "Poppins_400Regular",
+              fontWeight: "bold",
+              fontSize: 20,
+            }}
+          >
+            Image Profile Url
+          </Text>
+        </View>
+        <View style={styles.inputImgProfileUrl}>
+          <Input></Input>
+        </View>
         <View style={styles.buttonRegister}>
           <Button title="Submit" />
         </View>
@@ -193,7 +206,15 @@ const styles = StyleSheet.create({
     elevation: 2,
     marginHorizontal: 2,
   },
-
+  labelImgUrl: {
+    flex: 1,
+    justifyContent: "flex-end",
+    marginHorizontal: 10,
+  },
+  inputImgProfileUrl: {
+    flex: 1,
+    elevation: 2,
+  },
   buttonRegister: {
     flex: 1,
     marginHorizontal: 10,
