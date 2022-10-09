@@ -5,8 +5,9 @@ import { Login_washer } from "./screens/Login_washer";
 import { Profile_washer } from "./screens/Profile_washer";
 import { Edit_profile_washer } from "./screens/Edit_profile_washer";
 import { Payment_success } from "./screens/Payment_success";
-// import { QR_payment } from "./screens/QR_payment";
+import { QR_payment } from "./screens/QR_payment";
 import { Washer_map } from "./screens/Washer_map";
+import { Home_washer } from "./screens/Home_washer";
 
 export default function App() {
   return (
@@ -17,7 +18,8 @@ export default function App() {
       {/* <Edit_profile_washer></Edit_profile_washer> */}
       {/* <Payment_success></Payment_success> */}
       {/* <QR_payment></QR_payment> */}
-      <Washer_map></Washer_map>
+      {/* <Washer_map></Washer_map> */}
+      <Home_washer></Home_washer>
     </View>
   );
 }
