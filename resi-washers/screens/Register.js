@@ -130,20 +130,7 @@ export function Register() {
         <View style={styles.inputPhoneNumber}>
           <Input></Input>
         </View>
-        <View style={styles.labelAddress}>
-          <Text
-            style={{
-              fontFamily: "Poppins_400Regular",
-              fontWeight: "bold",
-              fontSize: 20,
-            }}
-          >
-            Address
-          </Text>
-        </View>
-        <View style={styles.inputAddress}>
-          <Input multiline></Input>
-        </View>
+
         <View style={styles.buttonRegister}>
           <Button title="Submit" />
         </View>
@@ -173,7 +160,7 @@ const styles = StyleSheet.create({
   },
   inputName: {
     flex: 1,
-    marginHorizontal: 10,
+    marginHorizontal: 2,
     elevation: 2,
   },
   labelEmail: {
@@ -184,7 +171,7 @@ const styles = StyleSheet.create({
   inputEmail: {
     flex: 1,
     elevation: 2,
-    marginHorizontal: 10,
+    marginHorizontal: 2,
   },
   labelPassword: {
     flex: 1,
@@ -194,7 +181,7 @@ const styles = StyleSheet.create({
   inputPassword: {
     flex: 1,
     elevation: 2,
-    marginHorizontal: 10,
+    marginHorizontal: 2,
   },
   labelPhoneNumber: {
     flex: 1,
@@ -204,18 +191,9 @@ const styles = StyleSheet.create({
   inputPhoneNumber: {
     flex: 1,
     elevation: 2,
-    marginHorizontal: 10,
+    marginHorizontal: 2,
   },
-  labelAddress: {
-    flex: 1,
-    justifyContent: "flex-end",
-    marginHorizontal: 10,
-  },
-  inputAddress: {
-    flex: 2,
-    elevation: 2,
-    marginHorizontal: 10,
-  },
+
   buttonRegister: {
     flex: 1,
     marginHorizontal: 10,

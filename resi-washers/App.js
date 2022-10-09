@@ -12,9 +12,9 @@ import { Home_washer } from "./screens/Home_washer";
 export default function App() {
   return (
     <View style={styles.container}>
-      {/* <Register></Register> */}
+      <Register></Register>
       {/* <Login_washer></Login_washer> */}
-      <Profile_washer></Profile_washer>
+      {/* <Profile_washer></Profile_washer> */}
       {/* <Edit_profile_washer></Edit_profile_washer> */}
       {/* <Payment_success></Payment_success> */}
       {/* <QR_payment></QR_payment> */}
