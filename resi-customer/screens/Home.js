@@ -58,9 +58,9 @@ export default function Home({navigation}){
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
             <Text style={styles.greetText}>Welcome back, Asep !</Text>
-            <View>
+            <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
                 <Image style={styles.profilePict} source={profilePicture} />
-            </View>
+            </TouchableOpacity>
         </View>
 
         <View style={styles.information}>
@@ -72,7 +72,7 @@ export default function Home({navigation}){
                 <Text style={styles.repayBalance}>Rp. 150.000</Text>
             </View>
             <View style={styles.addBtnContainer}>
-                <TouchableOpacity style={styles.addBtn}>
+                <TouchableOpacity style={styles.addBtn} onPress={() => navigation.navigate('TopUp')}>
                     <Icon name='add' style={styles.addIcon}></Icon>
                 </TouchableOpacity>
                 <Text style={styles.topUpText}>Top Up</Text>
@@ -82,7 +82,7 @@ export default function Home({navigation}){
         <View style={styles.cardSection}>
             <View>
                 <Text style={styles.cardTitle}>Ready to clean your bike ?</Text>
-                <TouchableOpacity style={styles.cleanBtn}>
+                <TouchableOpacity style={styles.cleanBtn} onPress={() => navigation.navigate('CreateBook')}>
                     <Text style={styles.cleanBtnText}>Click Here</Text>
                 </TouchableOpacity>
             </View>
