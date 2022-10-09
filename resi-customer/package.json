@@ -12,6 +12,8 @@
     "@expo-google-fonts/poppins": "^0.2.2",
     "@react-navigation/native": "^6.0.13",
     "@react-navigation/native-stack": "^6.9.0",
+    "@rneui/base": "^4.0.0-rc.6",
+    "@rneui/themed": "^4.0.0-rc.6",
     "expo": "~46.0.13",
     "expo-app-loading": "~2.1.0",
     "expo-font": "~10.2.0",
