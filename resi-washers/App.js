@@ -14,12 +14,12 @@ export default function App() {
     <View style={styles.container}>
       {/* <Register></Register> */}
       {/* <Login_washer></Login_washer> */}
-      {/* <Profile_washer></Profile_washer> */}
+      <Profile_washer></Profile_washer>
       {/* <Edit_profile_washer></Edit_profile_washer> */}
       {/* <Payment_success></Payment_success> */}
       {/* <QR_payment></QR_payment> */}
       {/* <Washer_map></Washer_map> */}
-      <Home_washer></Home_washer>
+      {/* <Home_washer></Home_washer> */}
     </View>
   );
 }

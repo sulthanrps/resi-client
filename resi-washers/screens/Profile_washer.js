@@ -4,6 +4,7 @@ import {
   View,
   Dimensions,
   ActivityIndicator,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, Icon } from "@rneui/themed";
@@ -73,7 +74,19 @@ export function Profile_washer() {
           </View>
         </View>
         <View style={styles.divProfile}>
-          <View style={styles.photoProfile}></View>
+          <View style={styles.photoProfile}>
+            <Image
+              style={{
+                resizeMode: "contain",
+                height: 130,
+                width: 130,
+                borderRadius: 130 / 2,
+              }}
+              source={{
+                uri: "https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_0.jpg",
+              }}
+            />
+          </View>
         </View>
         <View style={styles.username}>
           <Text
@@ -119,36 +132,9 @@ export function Profile_washer() {
             Rp. 100.000,-
           </Text>
         </View>
-        <View style={styles.bodyaddress}>
-          <Text
-            style={{
-              fontFamily: "Poppins_400Regular",
-              fontWeight: "bold",
-              fontSize: 20,
-              opacity: 0.6,
-            }}
-          >
-            Address :
-          </Text>
-          <Text style={{ opacity: 0.6 }}>
-            Jalan Perdamaian anti huru hara Block ABCDEF RT Pak Amin Tetangga
-          </Text>
-        </View>
-        <View style={styles.phoneNumber}>
-          <Text
-            style={{
-              fontFamily: "Poppins_400Regular",
-              fontWeight: "bold",
-              fontSize: 20,
-              opacity: 0.6,
-            }}
-          >
-            Phone Number
-          </Text>
-          <Text style={{ opacity: 0.6 }}>0812345678</Text>
-        </View>
+
         <View style={styles.blankbody}></View>
-        <View style={styles.buttonLogin_washer}>
+        <View style={styles.buttonEditProfile_washer}>
           <Button title="Edit Profile" />
         </View>
       </View>
@@ -171,7 +157,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   divProfile: {
-    flex: 2,
+    flex: 4,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -180,9 +166,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginTop: 20,
     resizeMode: "contain",
-    height: 55,
-    width: 55,
-    borderRadius: 44 / 2,
+    height: 130,
+    width: 130,
+    borderRadius: 130 / 2,
   },
   username: {
     flex: 1,
@@ -200,26 +186,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
   },
-  bodyaddress: {
-    // flex: 1,
-    height: 70,
-    justifyContent: "flex-end",
-    marginHorizontal: 10,
-    marginTop: 5,
-  },
-  phoneNumber: {
-    // flex: 1,
-    height: 80,
-    marginHorizontal: 10,
-    justifyContent: "flex-end",
-  },
+
   blankbody: {
-    flex: 6,
+    flex: 2,
     marginHorizontal: 10,
+    // backgroundColor: "red",
   },
-  buttonLogin_washer: {
-    flex: 1,
+  buttonEditProfile_washer: {
     marginHorizontal: 10,
-    marginTop: 10,
+    marginBottom: 10,
   },
 });
