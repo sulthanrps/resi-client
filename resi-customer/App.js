@@ -23,7 +23,9 @@ export default function App() {
           headerShown: false
         }} name='LandingPage' component={LandingPage}></Stack.Screen>
         <Stack.Screen name='Register' component={Register}></Stack.Screen>
-        <Stack.Screen name='Login' component={Login}></Stack.Screen>
+        <Stack.Screen options={{
+          headerShown: false
+        }} name='Login' component={Login}></Stack.Screen>
         <Stack.Screen name='Home' component={Home}></Stack.Screen>
         <Stack.Screen name='Profile' component={Profile}></Stack.Screen>
         <Stack.Screen name='TopUp' component={TopUp}></Stack.Screen>
