@@ -43,7 +43,9 @@ export default function App() {
         <Stack.Screen options={{
           headerShown: false
         }} name='LookingWasher' component={LookingWasher}></Stack.Screen>
-        <Stack.Screen name='BookTaken' component={BookTaken}></Stack.Screen>
+        <Stack.Screen options={{
+          headerShown: false
+        }} name='BookTaken' component={BookTaken}></Stack.Screen>
         <Stack.Screen name='WasherTracker' component={WasherTracker}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
