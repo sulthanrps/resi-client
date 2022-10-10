@@ -51,7 +51,9 @@ export default function HistoryBook(){
     }
     return (
         <View style={styles.cardContainer}>
-          <View style={styles.icon}></View>
+          <View>
+            <Icon style={styles.icon} name='bicycle' type='font-awesome' reverse color='#5377F9'></Icon>
+          </View>
           <View style={styles.schedule}>
             <Text>Bike Washed</Text>
             <Text>09 - 10 - 2022</Text>
@@ -65,10 +67,7 @@ export default function HistoryBook(){
 
 const styles = StyleSheet.create({
     icon : {
-        width: 50,
-        height: 50,
-        backgroundColor: 'gray',
-        borderRadius: 10
+        padding: 0
     },
     cardContainer : {
         display: 'flex',
@@ -83,15 +82,15 @@ const styles = StyleSheet.create({
         elevation: 5,
         backgroundColor: 'white',
         borderRadius: 10,
-        padding: 10,
+        padding: 5,
         marginBottom: 20
     },
     rightItem : {
-        marginLeft: '25%',
-        marginTop: 7
-    },
-    schedule : {
-        marginLeft: 10,
-        marginTop: 7
-    }
+      marginLeft: '25%',
+      marginTop: 15
+  },
+  schedule : {
+      marginLeft: 0,
+      marginTop: 15
+  }
 });

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator } from 'react-native';
 import {Icon} from '@rneui/themed'
 
 import {
@@ -50,8 +50,10 @@ export default function OnGoingBook(){
       return <ActivityIndicator />
     }
     return (
-        <View style={styles.cardContainer}>
-          <View style={styles.icon}></View>
+        <TouchableOpacity style={styles.cardContainer}>
+          <View>
+            <Icon style={styles.icon} name='bicycle' type='font-awesome' reverse color='#5377F9'></Icon>
+          </View>
           <View style={styles.schedule}>
             <Text>Bike Washing</Text>
             <Text>09 - 10 - 2022</Text>
@@ -62,16 +64,14 @@ export default function OnGoingBook(){
                 marginLeft: 43
             }}>10:00</Text>
           </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 
 const styles = StyleSheet.create({
     icon : {
-        width: 50,
-        height: 50,
-        backgroundColor: 'gray',
-        borderRadius: 10
+        padding: 0,
+        color: '#5377F9'
     },
     cardContainer : {
         display: 'flex',
@@ -86,15 +86,15 @@ const styles = StyleSheet.create({
         elevation: 5,
         backgroundColor: 'white',
         borderRadius: 10,
-        padding: 10,
+        padding: 5,
         marginBottom: 20
     },
     rightItem : {
         marginLeft: '25%',
-        marginTop: 7
+        marginTop: 15
     },
     schedule : {
-        marginLeft: 10,
-        marginTop: 7
+        marginLeft: 0,
+        marginTop: 15
     }
 });

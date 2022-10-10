@@ -37,8 +37,12 @@ export default function App() {
           headerTitle: 'Edit Profile'
         }} name='EditProfile' component={EditProfile}></Stack.Screen>
         <Stack.Screen name='DetailBook' component={DetailBook}></Stack.Screen>
-        <Stack.Screen name='CreateBook' component={CreateBook}></Stack.Screen>
-        <Stack.Screen name='LookingWasher' component={LookingWasher}></Stack.Screen>
+        <Stack.Screen options={{
+          headerShown: false
+        }} name='CreateBook' component={CreateBook}></Stack.Screen>
+        <Stack.Screen options={{
+          headerShown: false
+        }} name='LookingWasher' component={LookingWasher}></Stack.Screen>
         <Stack.Screen name='BookTaken' component={BookTaken}></Stack.Screen>
         <Stack.Screen name='WasherTracker' component={WasherTracker}></Stack.Screen>
       </Stack.Navigator>
