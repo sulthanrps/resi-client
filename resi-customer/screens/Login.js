@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, SafeAreaView, ActivityIndicator, Image } from 'react-native';
-
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, SafeAreaView, ActivityIndicator, Image, KeyboardAvoidingView } from 'react-native';
+import KeyboardAvoidingWrapper from '../components/KeyboardAvoidingWrapper';
 import {
   useFonts,
   Poppins_100Thin,
@@ -50,7 +50,9 @@ export default function Login({navigation}){
       return <ActivityIndicator />
     }
     return (
-      <SafeAreaView style={styles.container}>
+
+      <KeyboardAvoidingWrapper>
+        <SafeAreaView style={styles.container}>
 
         <View>
           <Text style={styles.loginText}>Login</Text>
@@ -59,7 +61,7 @@ export default function Login({navigation}){
         <View style={styles.greeting}>
           <Image style={styles.loginIllustration} source={login} />
         </View>
-        
+
         <View style={styles.inputSection}>
 
           <View style={styles.inputFormContainer}>
@@ -69,7 +71,7 @@ export default function Login({navigation}){
 
           <View style={styles.inputFormContainer}>
             <Text style={styles.label}>Password</Text>
-            <TextInput style={styles.inputForm} placeholder='Input Your Password'></TextInput>
+            <TextInput style={styles.inputForm} placeholder='Input Your Password' secureTextEntry={true}></TextInput>
           </View>
         </View>
 
@@ -78,8 +80,10 @@ export default function Login({navigation}){
               <Text style={styles.btnText}>Login</Text>
           </TouchableOpacity>
         </View>
+
+        </SafeAreaView>
+      </KeyboardAvoidingWrapper>
       
-      </SafeAreaView>
     )
 }
 
@@ -116,7 +120,7 @@ const styles = StyleSheet.create({
     },
     inputForm : {
       height: 50,
-      padding: 20,
+      padding: 10,
       width: '100%',
       shadowColor: "#000",
       shadowOffset: {

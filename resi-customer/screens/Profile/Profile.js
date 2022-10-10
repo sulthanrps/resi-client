@@ -56,17 +56,17 @@ if(!fontsLoaded){
         <View style={styles.identitySection}>
           <View style={styles.inputFormContainer}>
             <Text style={styles.label}>Name</Text>
-            <TextInput style={styles.inputForm} value='Asep Kopi'></TextInput>
+            <TextInput style={styles.inputForm} value='Asep Kopi' editable={false}></TextInput>
           </View>
 
           <View style={styles.inputFormContainer}>
             <Text style={styles.label}>Email</Text>
-            <TextInput style={styles.inputForm} value='asepkopi@mail.com'></TextInput>
+            <TextInput style={styles.inputForm} value='asepkopi@mail.com' editable={false}></TextInput>
           </View>
 
           <View style={styles.inputFormContainer}>
             <Text style={styles.label}>Phone Number</Text>
-            <TextInput style={styles.inputForm} value='08123456789'></TextInput>
+            <TextInput style={styles.inputForm} value='08123456789' editable={false}></TextInput>
           </View>
         </View>
         
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     },
     inputForm : {
       height: 50,
-      padding: 20,
+      padding: 10,
       width: '100%',
       shadowColor: "#000",
       shadowOffset: {
