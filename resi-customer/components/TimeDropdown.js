@@ -92,7 +92,6 @@ export default function TimeDropDown(){
                 fontFamily: 'Poppins_400Regular',
                 fontSize: 18
             }}
-            search={true}
             buttonTextStyle={{
                 textAlign: 'left',
                 fontFamily: 'Poppins_400Regular',
