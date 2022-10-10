@@ -91,7 +91,7 @@ export default function Home({navigation}){
 
         <View style={styles.onGoingBookSection}>
             <Text style={styles.listText}>On Going Book</Text>
-            <OnGoingBook></OnGoingBook>
+            <OnGoingBook navigation={navigation}></OnGoingBook>
         </View>
 
         <View style={styles.onGoingBookSection}>
