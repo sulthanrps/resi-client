@@ -30,7 +30,9 @@ export default function App() {
           headerShown: false
         }} name='Home' component={Home}></Stack.Screen>
         <Stack.Screen name='Profile' component={Profile}></Stack.Screen>
-        <Stack.Screen name='TopUp' component={TopUp}></Stack.Screen>
+        <Stack.Screen options={{
+          headerTitle: 'Top Up Repay'
+        }} name='TopUp' component={TopUp}></Stack.Screen>
         <Stack.Screen options={{
           headerTitle: 'Edit Profile'
         }} name='EditProfile' component={EditProfile}></Stack.Screen>
