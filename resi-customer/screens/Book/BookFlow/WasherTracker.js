@@ -4,7 +4,7 @@ export default function WasherTracker({navigation}){
     return (
       <View style={styles.container}>
         <Text>Washer is on the way!</Text>
-        <TouchableOpacity style={styles.startBtn}>
+        <TouchableOpacity style={styles.startBtn} onPress={() => navigation.navigate('SuccessPay')}>
             <Text style={styles.btnText}>Scan QR</Text>
         </TouchableOpacity>
       </View>

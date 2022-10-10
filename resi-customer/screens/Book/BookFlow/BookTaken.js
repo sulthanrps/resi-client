@@ -12,19 +12,19 @@ export default function LookingWasher({navigation}){
     // logic untuk auto fetching untuk pengecekan
     // apakah si washer sudah otw ke cust ato belum
 
-    // useFocusEffect(
-    //   React.useCallback(() => {
-    //     console.log(isOnGoing)
-    //     setTimeout(() => {
-    //       setIsOnGoing(true)
-    //       console.log(isOnGoing)
-    //     }, 10000)
-    //       if(isOnGoing){
-    //         console.log("hai");
-    //         navigation.navigate('WasherTracker')
-    //       }
-    //   }, [isOnGoing])
-    // )
+    useFocusEffect(
+      React.useCallback(() => {
+        console.log(isOnGoing)
+        setTimeout(() => {
+          setIsOnGoing(true)
+          console.log(isOnGoing)
+        }, 10000)
+          if(isOnGoing){
+            console.log("hai");
+            navigation.navigate('WasherTracker')
+          }
+      }, [isOnGoing])
+    )
 
     return (
       <SafeAreaView style={styles.container}>
