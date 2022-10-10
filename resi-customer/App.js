@@ -12,6 +12,7 @@ import CreateBook from './screens/Book/CreateBook';
 import LookingWasher from './screens/Book/BookFlow/LookingWasher';
 import BookTaken from './screens/Book/BookFlow/BookTaken';
 import WasherTracker from './screens/Book/BookFlow/WasherTracker';
+import SuccessPay from './screens/Book/BookFlow/SuccessPay';
 
 const Stack = createNativeStackNavigator();
 
@@ -47,6 +48,9 @@ export default function App() {
           headerShown: false
         }} name='BookTaken' component={BookTaken}></Stack.Screen>
         <Stack.Screen name='WasherTracker' component={WasherTracker}></Stack.Screen>
+        <Stack.Screen options={{
+          headerShown: false
+        }} name='SuccessPay' component={SuccessPay}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
