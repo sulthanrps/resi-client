@@ -24,7 +24,7 @@ import {
 } from "@expo-google-fonts/poppins";
 
 
-export default function OnGoingBook(){
+export default function OnGoingBook({navigation}){
     let [fontsLoaded] = useFonts({
       Poppins_100Thin,
       Poppins_100Thin_Italic,
@@ -50,7 +50,7 @@ export default function OnGoingBook(){
       return <ActivityIndicator />
     }
     return (
-        <TouchableOpacity style={styles.cardContainer}>
+        <TouchableOpacity style={styles.cardContainer} onPress={() => navigation.navigate('DetailBook')}>
           <View>
             <Icon style={styles.icon} name='bicycle' type='font-awesome' reverse color='#5377F9'></Icon>
           </View>
