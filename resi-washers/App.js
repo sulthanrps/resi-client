@@ -59,6 +59,7 @@ export default function App() {
     return <ActivityIndicator />;
   }
   return (
+
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerTitleAlign: "center" }}>
         <Stack.Screen
@@ -104,6 +105,7 @@ export default function App() {
         />
       </Stack.Navigator>
     </NavigationContainer>
+
   );
 }
 

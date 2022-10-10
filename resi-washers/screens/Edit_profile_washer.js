@@ -14,6 +14,7 @@ export function Edit_profile_washer({ navigation }) {
               uri: "https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_0.jpg",
             }}
           />
+
         </View>
       </View>
       <View style={styles.labelName}>
@@ -116,6 +117,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginTop: 20,
     resizeMode: "contain",
+
     height: 100,
     width: 100,
     borderRadius: 100 / 2,
@@ -126,6 +128,7 @@ const styles = StyleSheet.create({
     height: 100,
     width: 100,
     borderRadius: 100 / 2,
+
   },
   labelPassword: {
     flex: 1,
@@ -145,13 +148,22 @@ const styles = StyleSheet.create({
     flex: 1,
     elevation: 2,
   },
-  labelAddress: {
+  labelEmail: {
     flex: 1,
     justifyContent: "flex-end",
     marginHorizontal: 10,
   },
-  inputAddress: {
-    flex: 2,
+  inputEmail: {
+    flex: 1,
+    elevation: 2,
+  },
+  labelImgUrl: {
+    flex: 1,
+    justifyContent: "flex-end",
+    marginHorizontal: 10,
+  },
+  inputImgProfileUrl: {
+    flex: 1,
     elevation: 2,
   },
   buttonRegister: {

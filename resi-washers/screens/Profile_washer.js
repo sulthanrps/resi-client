@@ -1,6 +1,7 @@
 import { Text, StyleSheet, View, Dimensions, Image } from "react-native";
 import { Button, Icon } from "react-native-elements";
 
+
 const width = Dimensions.get("screen").width;
 const height = Dimensions.get("screen").height;
 export function Profile_washer({ navigation }) {
@@ -142,9 +143,9 @@ const styles = StyleSheet.create({
   blankbody: {
     flex: 2,
     marginHorizontal: 10,
+    // backgroundColor: "red",
   },
-  buttonLogin_washer: {
-    flex: 1,
+  buttonEditProfile_washer: {
     marginHorizontal: 10,
     marginTop: 10,
     justifyContent: "flex-end",

@@ -79,7 +79,7 @@ export function Register({ navigation }) {
         <View style={styles.inputPhoneNumber}>
           <Input></Input>
         </View>
-        <View style={styles.labelAddress}>
+        <View style={styles.labelImgUrl}>
           <Text
             style={{
               fontFamily: "Poppins_400Regular",
@@ -87,10 +87,12 @@ export function Register({ navigation }) {
               fontSize: 20,
             }}
           >
+
             Profile Image
           </Text>
         </View>
         <View style={styles.inputAddress}>
+
           <Input></Input>
         </View>
         <View style={styles.buttonRegister}>
@@ -158,15 +160,17 @@ const styles = StyleSheet.create({
     elevation: 2,
     marginHorizontal: 2,
   },
-  labelAddress: {
+  labelImgUrl: {
     flex: 1,
     justifyContent: "flex-end",
     marginHorizontal: 10,
   },
-  inputAddress: {
-    flex: 2,
+  inputImgProfileUrl: {
+    flex: 1,
     elevation: 2,
+
     marginHorizontal: 2,
+
   },
   buttonRegister: {
     flex: 1,

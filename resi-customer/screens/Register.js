@@ -1,5 +1,7 @@
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, SafeAreaView, ActivityIndicator } from 'react-native';
 
+import KeyboardAvoidingWrapper from '../components/KeyboardAvoidingWrapper';
+
 import {
   useFonts,
   Poppins_100Thin,
@@ -48,46 +50,48 @@ export default function Register({navigation}){
       return <ActivityIndicator />
     }
     return (
-      <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingWrapper>
+        <SafeAreaView style={styles.container}>
 
-        <View style={styles.greeting}>
-          <Text style={styles.greetText}>Create a new account</Text>
-        </View>
-        
-        <View style={styles.inputSection}>
-          <View style={styles.inputFormContainer}>
-            <Text style={styles.label}>Name</Text>
-            <TextInput style={styles.inputForm} placeholder='Input Your Name'></TextInput>
+          <View style={styles.greeting}>
+            <Text style={styles.greetText}>Create a new account</Text>
           </View>
 
-          <View style={styles.inputFormContainer}>
-            <Text style={styles.label}>Email</Text>
-            <TextInput style={styles.inputForm} placeholder='Input Your Email'></TextInput>
+          <View style={styles.inputSection}>
+            <View style={styles.inputFormContainer}>
+              <Text style={styles.label}>Name</Text>
+              <TextInput style={styles.inputForm} placeholder='Input Your Name'></TextInput>
+            </View>
+
+            <View style={styles.inputFormContainer}>
+              <Text style={styles.label}>Email</Text>
+              <TextInput style={styles.inputForm} placeholder='Input Your Email'></TextInput>
+            </View>
+
+            <View style={styles.inputFormContainer}>
+              <Text style={styles.label}>Password</Text>
+              <TextInput style={styles.inputForm} placeholder='Input Your Password' secureTextEntry={true}></TextInput>
+            </View>
+
+            <View style={styles.inputFormContainer}>
+              <Text style={styles.label}>Profile Picture URL</Text>
+              <TextInput style={styles.inputForm} placeholder='Input an URL for your profile picture'></TextInput>
+            </View>
+
+            <View style={styles.inputFormContainer}>
+              <Text style={styles.label}>Phone Number</Text>
+              <TextInput style={styles.inputForm} placeholder='Input Your Phone Number' keyboardType='number-pad'></TextInput>
+            </View>
           </View>
 
-          <View style={styles.inputFormContainer}>
-            <Text style={styles.label}>Password</Text>
-            <TextInput style={styles.inputForm} placeholder='Input Your Password'></TextInput>
+          <View style={styles.btnSection}>
+            <TouchableOpacity style={styles.startBtn} onPress={() => navigation.navigate('Login')}>
+                <Text style={styles.btnText}>Register</Text>
+            </TouchableOpacity>
           </View>
 
-          <View style={styles.inputFormContainer}>
-            <Text style={styles.label}>Profile Picture URL</Text>
-            <TextInput style={styles.inputForm} placeholder='Input an URL for your profile picture'></TextInput>
-          </View>
-
-          <View style={styles.inputFormContainer}>
-            <Text style={styles.label}>Phone Number</Text>
-            <TextInput style={styles.inputForm} placeholder='Input Your Phone Number'></TextInput>
-          </View>
-        </View>
-
-        <View style={styles.btnSection}>
-          <TouchableOpacity style={styles.startBtn} onPress={() => navigation.navigate('Login')}>
-              <Text style={styles.btnText}>Register</Text>
-          </TouchableOpacity>
-        </View>
-      
-      </SafeAreaView>
+        </SafeAreaView>
+      </KeyboardAvoidingWrapper>
     )
 }
 
@@ -124,7 +128,7 @@ const styles = StyleSheet.create({
     },
     inputForm : {
       height: 50,
-      padding: 20,
+      padding: 10,
       width: '100%',
       shadowColor: "#000",
       shadowOffset: {
