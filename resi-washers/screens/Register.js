@@ -1,78 +1,27 @@
-import {
-  Text,
-  StyleSheet,
-  View,
-  Dimensions,
-  ActivityIndicator,
-} from "react-native";
+import { Text, StyleSheet, View, Dimensions, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Input, Button } from "@rneui/themed";
-import {
-  useFonts,
-  Poppins_100Thin,
-  Poppins_100Thin_Italic,
-  Poppins_200ExtraLight,
-  Poppins_200ExtraLight_Italic,
-  Poppins_300Light,
-  Poppins_300Light_Italic,
-  Poppins_400Regular,
-  Poppins_400Regular_Italic,
-  Poppins_500Medium,
-  Poppins_500Medium_Italic,
-  Poppins_600SemiBold,
-  Poppins_600SemiBold_Italic,
-  Poppins_700Bold,
-  Poppins_700Bold_Italic,
-  Poppins_800ExtraBold,
-  Poppins_800ExtraBold_Italic,
-  Poppins_900Black,
-  Poppins_900Black_Italic,
-} from "@expo-google-fonts/poppins";
-import { useState, useEffect } from "react";
+import { Input, Button } from "react-native-elements";
 
 const width = Dimensions.get("screen").width;
 const height = Dimensions.get("screen").height;
-export function Register() {
-  let [fontsLoaded] = useFonts({
-    Poppins_100Thin,
-    Poppins_100Thin_Italic,
-    Poppins_200ExtraLight,
-    Poppins_200ExtraLight_Italic,
-    Poppins_300Light,
-    Poppins_300Light_Italic,
-    Poppins_400Regular,
-    Poppins_400Regular_Italic,
-    Poppins_500Medium,
-    Poppins_500Medium_Italic,
-    Poppins_600SemiBold,
-    Poppins_600SemiBold_Italic,
-    Poppins_700Bold,
-    Poppins_700Bold_Italic,
-    Poppins_800ExtraBold,
-    Poppins_800ExtraBold_Italic,
-    Poppins_900Black,
-    Poppins_900Black_Italic,
-  });
-  if (!fontsLoaded) {
-    return <ActivityIndicator />;
-  }
+export function Register({ navigation }) {
   return (
-    <SafeAreaView>
+    <ScrollView>
       <View style={styles.container}>
-        <View style={styles.header}>
-          <View>
-            <Text
-              style={{
-                fontFamily: "Poppins_400Regular",
-                fontWeight: "bold",
-                fontSize: 32,
-                opacity: 0.6,
-              }}
-            >
-              Register
-            </Text>
-          </View>
-        </View>
+        {/* <View style={styles.header}>
+            <View>
+              <Text
+                style={{
+                  fontFamily: "Poppins_400Regular",
+                  fontWeight: "bold",
+                  fontSize: 32,
+                  opacity: 0.6,
+                }}
+              >
+                Register
+              </Text>
+            </View>
+          </View> */}
         <View style={styles.labelName}>
           <Text
             style={{
@@ -138,17 +87,22 @@ export function Register() {
               fontSize: 20,
             }}
           >
-            Image Profile Url
+
+            Profile Image
           </Text>
         </View>
-        <View style={styles.inputImgProfileUrl}>
+        <View style={styles.inputAddress}>
+
           <Input></Input>
         </View>
         <View style={styles.buttonRegister}>
-          <Button title="Submit" />
+          <Button
+            title="Submit"
+            onPress={() => navigation.navigate("Home_washer")}
+          />
         </View>
       </View>
-    </SafeAreaView>
+    </ScrollView>
   );
 }
 
@@ -214,6 +168,9 @@ const styles = StyleSheet.create({
   inputImgProfileUrl: {
     flex: 1,
     elevation: 2,
+
+    marginHorizontal: 2,
+
   },
   buttonRegister: {
     flex: 1,
