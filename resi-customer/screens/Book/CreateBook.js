@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Image, ActivityIndicator, ScrollView } from 'react-native';
 import TimeDropDown from '../../components/TimeDropdown';
 import DateDropdown from '../../components/DateDropdown';
+import {Icon} from '@rneui/themed'
 import {
   useFonts,
   Poppins_100Thin,
@@ -50,18 +51,69 @@ return <ActivityIndicator />
 }
     return (
       <SafeAreaView style={styles.container}>
-        <Text>Create Book</Text>
-        <View>
-          <Text>Pick A Time</Text>
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.back} onPress={() => navigation.navigate('Home')}>
+            <Icon name='chevron-left' type='entypo'></Icon>
+          </TouchableOpacity>
+          <Text style={styles.title}>Create Book</Text>
+        </View>
+        
+
+        <View style={styles.locationContainer}>
+          <Text style={styles.locationDesc}>Your Location</Text>
+          <View style={styles.locationItems}>
+            <Icon name='location-pin' type='entypo' style={styles.locationIcon}></Icon>
+            <Text style={styles.location}>Jl. Pagi Sehat Banget</Text>
+          </View>
+          
+        </View>
+
+        <View style={styles.inputSection}>
+          <Text style={styles.label}>Pick Time</Text>
           <TimeDropDown />
         </View>
-        <View>
-          <Text>Pick A Date</Text>
+
+        <View style={styles.inputSection}>
+          <Text style={styles.label}>Pick Date</Text>
           {/* <DateDropdown /> */}
+          <TimeDropDown />
         </View>
-        <TouchableOpacity style={styles.startBtn} onPress={() => navigation.navigate('LookingWasher')}>
-            <Text style={styles.btnText}>Book Now</Text>
-        </TouchableOpacity>
+
+        <View style={styles.bikeSection}>
+          <Text style={styles.label}>Choose Bike</Text>
+          <Text style={styles.notes}>* Note that the price here is not include with the tax </Text>
+          <ScrollView horizontal={true} style={styles.bikeDetailContainer}>
+            <TouchableOpacity style={styles.bikeItem}>
+              <Image style={styles.bikeImg} source={{uri: 'https://o.remove.bg/downloads/264d6f95-c7d8-4e50-9fed-8d93155e1c0f/AIHP26TRDR13G1-removebg-preview.png'}} />
+              <Text style={styles.bikeName}>Sepeda Gunung</Text>
+              <Text style={styles.washPrice}>Rp. 50.000</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.bikeItem}>
+              <Image style={styles.bikeImg} source={{uri: 'https://o.remove.bg/downloads/264d6f95-c7d8-4e50-9fed-8d93155e1c0f/AIHP26TRDR13G1-removebg-preview.png'}} />
+              <Text style={styles.bikeName}>Sepeda Gunung</Text>
+              <Text style={styles.washPrice}>Rp. 50.000</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.bikeItem}>
+              <Image style={styles.bikeImg} source={{uri: 'https://o.remove.bg/downloads/264d6f95-c7d8-4e50-9fed-8d93155e1c0f/AIHP26TRDR13G1-removebg-preview.png'}} />
+              <Text style={styles.bikeName}>Sepeda Gunung</Text>
+              <Text style={styles.washPrice}>Rp. 50.000</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </View>
+
+
+        <View style={styles.priceSection}>
+          <View>
+            <Text style={styles.totalPriceText}>Total Price</Text>
+            <Text style={styles.grandTotal}>Rp. 60.000</Text>
+          </View>
+          <TouchableOpacity style={styles.startBtn} onPress={() => navigation.navigate('LookingWasher')}>
+              <Text style={styles.btnText}>Book Now</Text>
+          </TouchableOpacity>
+        </View>
+        
       </SafeAreaView>
     )
 }
@@ -69,15 +121,117 @@ return <ActivityIndicator />
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fff',
       alignItems: 'center',
+      backgroundColor: '#fff'
       // justifyContent: 'center',
     },
     startBtn : {
         backgroundColor: '#5377F9',
-        padding: 10
+        padding: 10,
+        paddingHorizontal: 20,
+        borderRadius: 10
     },
     btnText : {
-        color: 'white'
+        color: 'white',
+        fontFamily: 'Poppins_600SemiBold',
+        fontSize: 16,
+        marginTop: 2
+    },
+    title : {
+      fontFamily: 'Poppins_600SemiBold',
+      fontSize: 30
+    },
+    inputSection : {
+      marginTop: 20
+    },
+    label: {
+      fontFamily: 'Poppins_500Medium',
+      marginBottom: 6,
+      fontSize: 16
+    },
+    locationContainer : {
+      backgroundColor: '#f0f0f0',
+      width: '90%',
+      padding: 10,
+      marginTop: 20,
+      borderRadius: 10
+    },
+    locationItems: {
+      display: 'flex',
+      flexDirection: 'row',
+      marginTop: 10
+    },
+    location : {
+      marginTop: 5,
+      fontFamily: 'Poppins_400Regular'
+    },
+    locationDesc: {
+      fontFamily: 'Poppins_500Medium'
+    },
+    bikeImg : {
+      width: 200,
+      height: 200,
+      alignItems: 'center',
+    },
+    bikeName: {
+      fontFamily: 'Poppins_600SemiBold',
+      fontSize: 16
+    },
+    bikeSection: {
+      height: 335,
+      width: '90%',
+      justifyContent: 'center',
+      marginTop: 20
+    },
+    bikeItem : {
+      backgroundColor: '#f0f0f0',
+      padding: 10,
+      shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+        borderRadius: 8,
+        marginVertical: 10,
+        display: 'flex',
+        // alignItems: 'center',
+        marginBottom: 20,
+        marginRight: 25,
+        marginLeft: 5,
+    },
+    washPrice :{
+      fontFamily: 'Poppins_500Medium',
+      color: 'red'
+    },
+    priceSection: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '90%'
+    },
+    totalPriceText: {
+      fontFamily: 'Poppins_500Medium',
+      fontSize: 16
+    },
+    grandTotal :{
+      fontFamily: 'Poppins_500Medium',
+      fontSize: 18,
+      color : '#5377F9'
+    },
+    notes : {
+      fontFamily: 'Poppins_400Regular',
+      fontSize: 13,
+      color: 'red'
+    },
+    header: {
+      display: 'flex',
+      flexDirection: 'row'
+    },
+    back : {
+      marginTop: 10,
+      transform: [{translateX: -60}]
     }
 });
