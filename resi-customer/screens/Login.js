@@ -30,6 +30,10 @@ export default function Login({navigation}){
 
     let [hidePassword, setHidePassword] = useState(true)
     let [passIcon, setPassIcon] = useState('eye')
+    let [dataLogin, setDataLogin] = useState({
+      email : '',
+      password : ''
+    })
 
     let seePassword = () => {
       if(hidePassword){
@@ -86,13 +90,23 @@ export default function Login({navigation}){
 
           <View style={styles.inputFormContainer}>
             <Text style={styles.label}>Email</Text>
-            <TextInput style={styles.inputForm} placeholder='Input Your Email'></TextInput>
+            <TextInput style={styles.inputForm} placeholder='Input Your Email' onChangeText={(value) => {
+                setDataLogin({
+                  ...dataLogin,
+                  email : value
+                })
+              }}></TextInput>
           </View>
 
           <View style={styles.inputFormContainer}>
             <Text style={styles.label}>Password</Text>
             <View style={styles.passwordInput}>
-              <TextInput style={styles.inputForm} placeholder='Input Your Password' secureTextEntry={hidePassword}></TextInput>
+              <TextInput style={styles.inputForm} placeholder='Input Your Password' secureTextEntry={hidePassword} onChangeText={(value) => {
+                setDataLogin({
+                  ...dataLogin,
+                  password : value
+                })
+              }}></TextInput>
               <TouchableOpacity style={styles.seePasswordBtn} onPress={() => seePassword()}>
                 <Icon name={passIcon} type='entypo'></Icon>
               </TouchableOpacity>
@@ -101,7 +115,10 @@ export default function Login({navigation}){
         </View>
 
         <View style={styles.btnSection}>
-          <TouchableOpacity style={styles.startBtn} onPress={() => navigation.navigate('Home')}>
+          <TouchableOpacity style={styles.startBtn} onPress={() => {
+            console.log(dataLogin)
+            navigation.navigate('Home')
+          }}>
               <Text style={styles.btnText}>Login</Text>
           </TouchableOpacity>
         </View>

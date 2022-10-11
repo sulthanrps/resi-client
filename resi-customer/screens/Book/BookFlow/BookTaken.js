@@ -4,6 +4,7 @@ import profilePict from '../../../assets/profile-pict.png'
 import {Icon} from '@rneui/themed'
 import { useFocusEffect } from '@react-navigation/native';
 import * as React from 'react'
+import * as Linking from 'expo-linking'
 
 export default function LookingWasher({navigation}){
     // let isOnGoing = false
@@ -58,7 +59,7 @@ export default function LookingWasher({navigation}){
             <Text style={styles.name}>Asep Kopi</Text>
             <Text style={styles.role}>Washer</Text>
           </View>
-          <TouchableOpacity style={styles.callBtn}>
+          <TouchableOpacity style={styles.callBtn} onPress={() => Linking.openURL('tel:08123456789')}>
             <Icon name='call' reverse color='green'></Icon>
           </TouchableOpacity>
         </View>
