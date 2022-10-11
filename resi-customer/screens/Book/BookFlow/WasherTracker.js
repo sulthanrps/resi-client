@@ -27,7 +27,7 @@ export default function WasherTracker({navigation}){
               </TouchableOpacity>
             </View>
 
-            <TouchableOpacity style={styles.startBtn} onPress={() => navigation.navigate('SuccessPay')}>
+            <TouchableOpacity style={styles.startBtn} onPress={() => navigation.navigate('Scan')}>
                 <Text style={styles.btnText}>Scan QR</Text>
             </TouchableOpacity>
       </SafeAreaView>
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        backgroundColor: '#f0f0f0',
+        backgroundColor: 'white',
         borderRadius: 10,
         padding: 10,
         marginBottom: 10,
@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
     title: {
       fontFamily: 'Poppins_600SemiBold',
       fontSize: 18,
-      marginVertical: 20
+      marginBottom: 20,
+      marginTop: 10
     }
 });
