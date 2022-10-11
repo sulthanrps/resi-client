@@ -23,8 +23,10 @@ import {
 } from "@expo-google-fonts/poppins";
 
 import KeyboardAvoidingWrapper from '../../components/KeyboardAvoidingWrapper';
+import { useState } from 'react';
 
 export default function TopUp({navigation}){
+  const [topUpAmount, setTopUpAmount] = useState(0)
   let [fontsLoaded] = useFonts({
     Poppins_100Thin,
     Poppins_100Thin_Italic,
@@ -57,12 +59,17 @@ export default function TopUp({navigation}){
           <View style={styles.identitySection}>
             <View style={styles.inputFormContainer}>
                 <Text style={styles.label}>Input Amount Of Top Up (IDR)</Text>
-                <TextInput style={styles.inputForm} placeholder='Input your desirable amount to top up' keyboardType='number-pad'></TextInput>
+                <TextInput style={styles.inputForm} placeholder='Input your desirable amount to top up' keyboardType='number-pad' onChangeText={(value) => {
+                setTopUpAmount(value)
+              }}></TextInput>
             </View>
           </View>
 
 
-          <TouchableOpacity style={styles.startBtn}>
+          <TouchableOpacity style={styles.startBtn} onPress={() => {
+            console.log(topUpAmount);
+            navigation.navigate('Home')
+          }}>
               <Text style={styles.btnText}>Top Up</Text>
           </TouchableOpacity>
         </SafeAreaView>

@@ -20,7 +20,11 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSCameraUsageDescription": "This app uses the camera to scan barcodes on payment feature."
+        "NSCameraUsageDescription": "This app uses the camera to scan barcodes on payment feature.",
+        "UIBackgroundModes": [
+          "location",
+          "fetch"
+        ]
       }
     },
     "android": {

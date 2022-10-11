@@ -1,16 +1,79 @@
-import { StyleSheet, Text, View, TouchableOpacity, Dimensions, SafeAreaView, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions, SafeAreaView, Image, ActivityIndicator } from 'react-native';
 import MapView from 'react-native-maps'
 import profilePict from '../../../assets/profile-pict.png'
 import {Icon} from '@rneui/themed'
+import * as Linking from 'expo-linking'
+import {useRef, useState, useEffect} from 'react'
+import * as Location from 'expo-location'
 
 
 const width = Dimensions.get('window').width
 const height = Dimensions.get('window').height
 
 export default function WasherTracker({navigation}){
+    const [state, setState] = useState({
+      customerCoor : {
+        latitude : -8.677531223237352,
+        longitude : 115.20088859707197,
+        latitudeDelta : 0.0922,
+        longitudeDelta : 0.0421
+      },
+      washerCoor : {
+        latitude : -8.6753145,
+        longitude : 115.2018200,
+        latitudeDelta : 0.0922,
+        longitudeDelta : 0.0421
+      },
+    })
+
+    const [customerPoint, setCustomerPoint] = useState({
+        latitude : 0,
+        longitude : 0,
+        latitudeDelta : 0.0922,
+        longitudeDelta : 0.0421
+    })
+
+    const mapRef = useRef()
+
+    const { customerCoor, washerCoor } = state
+
+    const [location, setLocation] = useState(null)
+    const [errorMsg, setErrorMsg] = useState(null)
+
+    useEffect(() => {
+      (async () => {
+        
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          setErrorMsg('Permission to access location was denied');
+          return;
+        }
+  
+        let location = await Location.getCurrentPositionAsync({});
+        setLocation(location)
+        setCustomerPoint({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude
+        })
+      })();
+    }, [])
+
+    if(!location){
+      return (
+        <SafeAreaView>
+          <ActivityIndicator size='large' color='blue' />
+        </SafeAreaView>
+      )
+    }
+
     return (
       <SafeAreaView style={styles.container}>
-        <MapView style={styles.map} />
+        <MapView style={styles.map} initialRegion={customerCoor} ref={mapRef}>
+          <MapView.Marker coordinate={customerPoint} />
+          <MapView.Marker coordinate={washerCoor} />
+
+          {/* LOGIC MAP DIRECTIONS DISINI */}
+        </MapView>
         <View>
           <Text style={styles.title}>Your washer is on their way !</Text>
         </View>
@@ -22,7 +85,7 @@ export default function WasherTracker({navigation}){
                 <Text style={styles.name}>Asep Kopi</Text>
                 <Text style={styles.role}>Washer</Text>
               </View>
-              <TouchableOpacity style={styles.callBtn}>
+              <TouchableOpacity style={styles.callBtn} onPress={() => Linking.openURL('tel:08123456789')}>
                 <Icon name='call' reverse color='green'></Icon>
               </TouchableOpacity>
             </View>

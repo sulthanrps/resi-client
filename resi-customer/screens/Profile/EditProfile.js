@@ -20,10 +20,18 @@ import {
   Poppins_900Black,
   Poppins_900Black_Italic,
 } from "@expo-google-fonts/poppins";
+import {useState} from 'react'
 
 import KeyboardAvoidingWrapper from '../../components/KeyboardAvoidingWrapper';
 
 export default function EditProfile({navigation}){
+  const [dataCustomer, setDataCustomer] = useState({
+    name : 'Asep Kopi',
+    email : 'asepkopi@mail.com',
+    profilePictUrl : 'https://image-url.com',
+    phoneNumber : '08123456789'
+  })
+
   let [fontsLoaded] = useFonts({
     Poppins_100Thin,
     Poppins_100Thin_Italic,
@@ -54,25 +62,48 @@ if(!fontsLoaded){
           <View style={styles.identitySection}>
             <View style={styles.inputFormContainer}>
               <Text style={styles.label}>Name</Text>
-              <TextInput style={styles.inputForm} defaultValue='Asep Kopi'></TextInput>
+              <TextInput style={styles.inputForm} defaultValue={dataCustomer.name} onChangeText={(value) => {
+                setDataCustomer({
+                  ...dataCustomer,
+                  name : value
+                })
+              }}></TextInput>
             </View>
 
             <View style={styles.inputFormContainer}>
               <Text style={styles.label}>Email</Text>
-              <TextInput style={styles.inputForm} defaultValue='asepkopi@mail.com'></TextInput>
+              <TextInput style={styles.inputForm} defaultValue={dataCustomer.email} onChangeText={(value) => {
+                setDataCustomer({
+                  ...dataCustomer,
+                  email : value
+                })
+              }}></TextInput>
             </View>
 
             <View style={styles.inputFormContainer}>
               <Text style={styles.label}>Profile Picture URL</Text>
-              <TextInput style={styles.inputForm} defaultValue='http://image-url.jpg'></TextInput>
+              <TextInput style={styles.inputForm} defaultValue={dataCustomer.profilePictUrl} onChangeText={(value) => {
+                setDataCustomer({
+                  ...dataCustomer,
+                  profilePictUrl : value
+                })
+              }}></TextInput>
             </View>
 
             <View style={styles.inputFormContainer}>
               <Text style={styles.label}>Phone Number</Text>
-              <TextInput style={styles.inputForm} defaultValue='08123456789' keyboardType='number-pad'></TextInput>
+              <TextInput style={styles.inputForm} defaultValue={dataCustomer.phoneNumber} keyboardType='number-pad' onChangeText={(value) => {
+                setDataCustomer({
+                  ...dataCustomer,
+                  phoneNumber : value
+                })
+              }}></TextInput>
             </View>
           </View>
-          <TouchableOpacity style={styles.startBtn} onPress={() => navigation.navigate('Profile')}>
+          <TouchableOpacity style={styles.startBtn} onPress={() => {
+            console.log(dataCustomer)
+            navigation.navigate('Profile')
+          }}>
               <Text style={styles.btnText}>Save Profile</Text>
           </TouchableOpacity>
         </SafeAreaView>

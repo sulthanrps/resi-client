@@ -24,9 +24,57 @@ import {
   Poppins_900Black,
   Poppins_900Black_Italic,
 } from "@expo-google-fonts/poppins";
+import { useEffect, useState } from 'react';
+import * as Location from 'expo-location'
 
 export default function CreateBook({navigation}){
   
+  const [location, setLocation] = useState(null)
+  const [washPrice, setWashPrice] = useState('0')
+  const [errorMsg, setErrorMsg] = useState(null)
+  const [currentAddress, setCurrentAddress] = useState(null)
+
+  const [dataBook, setDataBook] = useState({
+    currentLocation : '',
+    time : '',
+    date : '',
+    bikeId: ''
+  })
+
+  console.log(dataBook)
+
+  useEffect(() => {
+    (async () => {
+      
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location)
+      setDataBook({
+        ...dataBook,
+        currentLocation : location
+      })
+      let address = await Location.reverseGeocodeAsync(location.coords)
+      setCurrentAddress(address[0].street)
+    })();
+  }, [])
+
+  let text = 'Get your current location ...';
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (currentAddress) {
+    text = currentAddress;
+    
+    // ERROR -> INFINITE LOOP, MEET REACT RE-RENDERING LIMITATION, SOLVED DENGAN CARA SET CURRENT LOCATION DI USEEFFECT
+    // setDataBook({
+    //   ...dataBook,
+    //   currentLocation: location
+    // })
+  }
 
   let [fontsLoaded] = useFonts({
     Poppins_100Thin,
@@ -65,8 +113,8 @@ return <ActivityIndicator />
         <View style={styles.locationContainer}>
           <Text style={styles.locationDesc}>Your Location</Text>
           <View style={styles.locationItems}>
-            <Icon name='location-pin' type='entypo' style={styles.locationIcon}></Icon>
-            <Text style={styles.location}>Jl. Pagi Sehat Banget</Text>
+            <Icon name='location-pin' type='entypo'></Icon>
+            <Text style={styles.location}>{text}</Text>
           </View>
           
         </View>
@@ -86,22 +134,46 @@ return <ActivityIndicator />
           <Text style={styles.label}>Choose Bike</Text>
           <Text style={styles.notes}>* Note that the price here is not include with the tax </Text>
           <ScrollView horizontal={true} style={styles.bikeDetailContainer}>
-            <TouchableOpacity style={styles.bikeItem}>
+            <TouchableOpacity style={styles.bikeItem} onPress={() => {
+              let price = 50000
+              price = price + price * 20 / 100
+              setWashPrice(price)
+              setDataBook({
+                ...dataBook,
+                bikeId: 1
+              })
+            }}>
               <Image style={styles.bikeImg} source={bikeSample} />
               <Text style={styles.bikeName}>Sepeda Gunung</Text>
               <Text style={styles.washPrice}>Rp. 50.000</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.bikeItem}>
+            <TouchableOpacity style={styles.bikeItem} onPress={() => {
+              let price = 60000
+              price = price + price * 20 / 100
+              setWashPrice(price)
+              setDataBook({
+                ...dataBook,
+                bikeId: 2
+              })
+            }}>
               <Image style={styles.bikeImg} source={bikeSample} />
               <Text style={styles.bikeName}>Sepeda Gunung</Text>
-              <Text style={styles.washPrice}>Rp. 50.000</Text>
+              <Text style={styles.washPrice}>Rp. 60.000</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.bikeItem}>
+            <TouchableOpacity style={styles.bikeItem} onPress={() => {
+              let price = 40000
+              price = price + price * 20 / 100
+              setWashPrice(price)
+              setDataBook({
+                ...dataBook,
+                bikeId: 3
+              })
+            }}>
               <Image style={styles.bikeImg} source={bikeSample} />
               <Text style={styles.bikeName}>Sepeda Gunung</Text>
-              <Text style={styles.washPrice}>Rp. 50.000</Text>
+              <Text style={styles.washPrice}>Rp. 40.000</Text>
             </TouchableOpacity>
           </ScrollView>
         </View>
@@ -110,7 +182,7 @@ return <ActivityIndicator />
         <View style={styles.priceSection}>
           <View>
             <Text style={styles.totalPriceText}>Total Price</Text>
-            <Text style={styles.grandTotal}>Rp. 60.000</Text>
+            <Text style={styles.grandTotal}>Rp. {washPrice.toLocaleString('id', 'ID', {type : 'currency', currency: 'IDR'})}</Text>
           </View>
           <TouchableOpacity style={styles.startBtn} onPress={() => navigation.navigate('LookingWasher')}>
               <Text style={styles.btnText}>Book Now</Text>
