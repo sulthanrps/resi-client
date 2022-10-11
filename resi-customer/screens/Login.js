@@ -1,5 +1,6 @@
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, SafeAreaView, ActivityIndicator, Image, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, SafeAreaView, ActivityIndicator, Image } from 'react-native';
 import KeyboardAvoidingWrapper from '../components/KeyboardAvoidingWrapper';
+import { Icon } from "@rneui/themed";
 import {
   useFonts,
   Poppins_100Thin,
@@ -23,8 +24,25 @@ import {
 } from "@expo-google-fonts/poppins";
 
 import login from '../assets/login.png'
+import { useState } from 'react';
 
 export default function Login({navigation}){
+
+    let [hidePassword, setHidePassword] = useState(true)
+    let [passIcon, setPassIcon] = useState('eye')
+
+    let seePassword = () => {
+      if(hidePassword){
+        setHidePassword(false)
+        setPassIcon('eye-with-line')
+      }
+
+      else {
+        setHidePassword(true)
+        setPassIcon('eye')
+      }
+    }
+
     let [fontsLoaded] = useFonts({
       Poppins_100Thin,
       Poppins_100Thin_Italic,
@@ -45,6 +63,8 @@ export default function Login({navigation}){
       Poppins_900Black,
       Poppins_900Black_Italic
     });
+
+
 
     if(!fontsLoaded){
       return <ActivityIndicator />
@@ -71,7 +91,12 @@ export default function Login({navigation}){
 
           <View style={styles.inputFormContainer}>
             <Text style={styles.label}>Password</Text>
-            <TextInput style={styles.inputForm} placeholder='Input Your Password' secureTextEntry={true}></TextInput>
+            <View style={styles.passwordInput}>
+              <TextInput style={styles.inputForm} placeholder='Input Your Password' secureTextEntry={hidePassword}></TextInput>
+              <TouchableOpacity style={styles.seePasswordBtn} onPress={() => seePassword()}>
+                <Icon name={passIcon} type='entypo'></Icon>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
 
@@ -152,5 +177,12 @@ const styles = StyleSheet.create({
       textAlign : 'center',
       fontFamily: 'Poppins_700Bold',
       fontSize: 32
+    },
+    passwordInput : {
+      flexDirection: 'row'
+    },
+    seePasswordBtn : {
+      marginTop: 23,
+      transform: [{translateX: -35}]
     }
 });

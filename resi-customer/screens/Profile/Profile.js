@@ -70,9 +70,16 @@ if(!fontsLoaded){
           </View>
         </View>
         
-        <TouchableOpacity style={styles.startBtn} onPress={() => navigation.navigate('EditProfile')}>
-            <Text style={styles.btnText}>Edit Profile</Text>
-        </TouchableOpacity>
+        <View style={styles.btnSection}>
+          <TouchableOpacity style={styles.startBtn} onPress={() => navigation.navigate('EditProfile')}>
+              <Text style={styles.btnText}>Edit Profile</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.startBtn} onPress={() => navigation.navigate('Login')}>
+              <Text style={styles.btnText}>Logout</Text>
+          </TouchableOpacity>
+        </View>
+        
       </SafeAreaView>
     )
 }
@@ -94,7 +101,8 @@ const styles = StyleSheet.create({
         padding: 16,
         marginHorizontal: 20,
         marginTop: 20,
-        borderRadius: 10
+        borderRadius: 10,
+        width: '50%'
     },
     btnText : {
         color: 'white',
@@ -143,5 +151,11 @@ const styles = StyleSheet.create({
       width: '100%',
       display: 'flex',
       alignItems: 'center'
+    },
+    btnSection : {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-evenly',
+      marginHorizontal: 25
     }
 });

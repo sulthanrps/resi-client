@@ -1,52 +1,34 @@
-import * as React from 'react';
-import { Button } from 'react-native';
-import { DatePickerModal } from 'react-native-paper-dates';
+import React, {useState} from 'react';
+import {View} from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker'
 
 export default function DateDropdown() {
-  const [date, setDate] = React.useState<Date | undefined>(undefined);
-  const [open, setOpen] = React.useState(false);
+  const [date, setDate] = useState(new Date(1598051730000));
 
-  const onDismissSingle = React.useCallback(() => {
-    setOpen(false);
-  }, [setOpen]);
+  const onChange = (event ,selectedDate) => {
+    const currentDate = selectedDate
+    setDate(currentDate);
+    console.log(currentDate, '<< dari date picker')
+    let fDate = currentDate.getDate() + '/' + (currentDate.getMonth() + 1) + '/' + currentDate.getFullYear();
+    console.log(fDate, '<< hasil modifikasi')
+  }
 
-  const onConfirmSingle = React.useCallback(
-    (params) => {
-      setOpen(false);
-      setDate(params.date);
-    },
-    [setOpen, setDate]
-  );
 
   return (
-    <>
-      <Button onPress={() => setOpen(true)}>
-        Pick single date
-      </Button>
-      <DatePickerModal
-        locale="en"
-        mode="single"
-        visible={open}
-        onDismiss={onDismissSingle}
-        date={date}
-        onConfirm={onConfirmSingle}
-        // validRange={{
-        //   startDate: new Date(2021, 1, 2),  // optional
-        //   endDate: new Date(), // optional
-        //   disabledDates: [new Date()] // optional
-        // }}
-        // onChange={} // same props as onConfirm but triggered without confirmed by user
-        // saveLabel="Save" // optional
-        // saveLabelDisabled={true} // optional, default is false
-        // uppercase={false} // optional, default is true
-        // label="Select date" // optional
-        // animationType="slide" // optional, default is 'slide' on ios/android and 'none' on web
-        // startYear={2000} // optional, default is 1800
-        // endYear={2100} // optional, default is 2200
-        // closeIcon="close" // optional, default is "close"
-        // editIcon="pencil" // optional, default is "pencil"
-        // calendarIcon="calendar" // optional, default is "calendar"
+    <View style={{
+      width: 0
+    }}>
+      <DateTimePicker
+        testID='dateTimePicker'
+        value={date}
+        mode='date'
+        onChange={onChange}
+        style={{
+          width: 200,
+          height: 50,
+          marginLeft: -245,
+        }}
       />
-    </>
+    </View>
   );
 }

@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Image, Activity
 import TimeDropDown from '../../components/TimeDropdown';
 import DateDropdown from '../../components/DateDropdown';
 import {Icon} from '@rneui/themed'
+import bikeSample from '../../assets/bike-sample.png'
 import {
   useFonts,
   Poppins_100Thin,
@@ -74,9 +75,9 @@ return <ActivityIndicator />
         </View>
 
         <View style={styles.inputSection}>
-          <Text style={styles.label}>Pick Date</Text>
-          {/* <DateDropdown /> */}
-          <TimeDropDown />
+          <Text style={styles.labelDate}>Pick Date</Text>
+          <DateDropdown />
+          {/* <TimeDropDown /> */}
         </View>
 
         <View style={styles.bikeSection}>
@@ -84,19 +85,19 @@ return <ActivityIndicator />
           <Text style={styles.notes}>* Note that the price here is not include with the tax </Text>
           <ScrollView horizontal={true} style={styles.bikeDetailContainer}>
             <TouchableOpacity style={styles.bikeItem}>
-              <Image style={styles.bikeImg} source={{uri: 'https://o.remove.bg/downloads/264d6f95-c7d8-4e50-9fed-8d93155e1c0f/AIHP26TRDR13G1-removebg-preview.png'}} />
+              <Image style={styles.bikeImg} source={bikeSample} />
               <Text style={styles.bikeName}>Sepeda Gunung</Text>
               <Text style={styles.washPrice}>Rp. 50.000</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.bikeItem}>
-              <Image style={styles.bikeImg} source={{uri: 'https://o.remove.bg/downloads/264d6f95-c7d8-4e50-9fed-8d93155e1c0f/AIHP26TRDR13G1-removebg-preview.png'}} />
+              <Image style={styles.bikeImg} source={bikeSample} />
               <Text style={styles.bikeName}>Sepeda Gunung</Text>
               <Text style={styles.washPrice}>Rp. 50.000</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.bikeItem}>
-              <Image style={styles.bikeImg} source={{uri: 'https://o.remove.bg/downloads/264d6f95-c7d8-4e50-9fed-8d93155e1c0f/AIHP26TRDR13G1-removebg-preview.png'}} />
+              <Image style={styles.bikeImg} source={bikeSample} />
               <Text style={styles.bikeName}>Sepeda Gunung</Text>
               <Text style={styles.washPrice}>Rp. 50.000</Text>
             </TouchableOpacity>
@@ -170,7 +171,7 @@ const styles = StyleSheet.create({
     },
     bikeImg : {
       width: 200,
-      height: 200,
+      height: 130,
       alignItems: 'center',
     },
     bikeName: {
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
       fontSize: 16
     },
     bikeSection: {
-      height: 335,
+      height: 270,
       width: '90%',
       justifyContent: 'center',
       marginTop: 20
@@ -210,7 +211,8 @@ const styles = StyleSheet.create({
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      width: '90%'
+      width: '90%',
+      marginTop: 50
     },
     totalPriceText: {
       fontFamily: 'Poppins_500Medium',
@@ -233,5 +235,11 @@ const styles = StyleSheet.create({
     back : {
       marginTop: 10,
       transform: [{translateX: -60}]
-    }
+    },
+    labelDate: {
+      fontFamily: 'Poppins_500Medium',
+      marginBottom: 0,
+      fontSize: 16,
+      marginLeft: -165
+    },
 });
