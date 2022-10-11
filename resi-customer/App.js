@@ -13,6 +13,7 @@ import LookingWasher from './screens/Book/BookFlow/LookingWasher';
 import BookTaken from './screens/Book/BookFlow/BookTaken';
 import WasherTracker from './screens/Book/BookFlow/WasherTracker';
 import SuccessPay from './screens/Book/BookFlow/SuccessPay';
+import ScanBarcode from './screens/Book/BookFlow/ScanBarcode';
 
 const Stack = createNativeStackNavigator();
 
@@ -52,6 +53,9 @@ export default function App() {
         <Stack.Screen options={{
           headerShown: false,
         }} name='WasherTracker' component={WasherTracker}></Stack.Screen>
+        <Stack.Screen options={{
+          headerShown: false
+        }} name='Scan' component={ScanBarcode}></Stack.Screen>
         <Stack.Screen options={{
           headerShown: false
         }} name='SuccessPay' component={SuccessPay}></Stack.Screen>

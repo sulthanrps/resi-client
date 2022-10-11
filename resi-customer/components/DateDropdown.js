@@ -3,7 +3,7 @@ import {View} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker'
 
 export default function DateDropdown() {
-  const [date, setDate] = useState(new Date(1598051730000));
+  const [date, setDate] = useState(new Date());
 
   const onChange = (event ,selectedDate) => {
     const currentDate = selectedDate
@@ -26,7 +26,7 @@ export default function DateDropdown() {
         style={{
           width: 200,
           height: 50,
-          marginLeft: -245,
+          marginLeft: -250,
         }}
       />
     </View>
