@@ -49,7 +49,9 @@ export default function App() {
         <Stack.Screen options={{
           headerShown: false
         }} name='BookTaken' component={BookTaken}></Stack.Screen>
-        <Stack.Screen name='WasherTracker' component={WasherTracker}></Stack.Screen>
+        <Stack.Screen options={{
+          headerShown: false,
+        }} name='WasherTracker' component={WasherTracker}></Stack.Screen>
         <Stack.Screen options={{
           headerShown: false
         }} name='SuccessPay' component={SuccessPay}></Stack.Screen>

@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Image } from 'react-native';
 import profilePict from '../../assets/profile-pict.png'
+import bikeSample from '../../assets/bike-sample.png'
 
 export default function DetailBook({navigation}){
     return (
@@ -14,7 +15,7 @@ export default function DetailBook({navigation}){
 
         <Text style={styles.detailBookTitle}>Bike Type</Text>
         <View style={styles.bikeDetailContainer}>
-          <Image style={styles.bikeImg} source={{uri: 'https://o.remove.bg/downloads/264d6f95-c7d8-4e50-9fed-8d93155e1c0f/AIHP26TRDR13G1-removebg-preview.png'}} />
+          <Image style={styles.bikeImg} source={bikeSample} />
           <Text style={styles.bikeName}>Sepeda Gunung</Text>
         </View>
 
@@ -40,7 +41,7 @@ const styles = StyleSheet.create({
       margin: 20
     },
     startBtn : {
-        backgroundColor: '#DF4040',
+        backgroundColor: '#EE4141',
         padding: 15,
         width: '100%',
         borderRadius: 8
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
     },
     bikeDetailContainer: {
       backgroundColor: 'white',
-      padding: 10,
+      padding: 15,
       shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -99,7 +100,7 @@ const styles = StyleSheet.create({
         marginBottom: 20
     },
     bikeImg : {
-      width: 200,
+      width: '100%',
       height: 200
     },
     bikeName: {
