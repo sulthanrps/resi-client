@@ -24,9 +24,11 @@ import {
   Poppins_900Black,
   Poppins_900Black_Italic,
 } from "@expo-google-fonts/poppins";
+import { useState } from 'react';
 
 export default function CreateBook({navigation}){
   
+  const [washPrice, setWashPrice] = useState('0')
 
   let [fontsLoaded] = useFonts({
     Poppins_100Thin,
@@ -86,22 +88,34 @@ return <ActivityIndicator />
           <Text style={styles.label}>Choose Bike</Text>
           <Text style={styles.notes}>* Note that the price here is not include with the tax </Text>
           <ScrollView horizontal={true} style={styles.bikeDetailContainer}>
-            <TouchableOpacity style={styles.bikeItem}>
+            <TouchableOpacity style={styles.bikeItem} onPress={() => {
+              let price = 50000
+              price = price + price * 20 / 100
+              setWashPrice(price)
+            }}>
               <Image style={styles.bikeImg} source={bikeSample} />
               <Text style={styles.bikeName}>Sepeda Gunung</Text>
               <Text style={styles.washPrice}>Rp. 50.000</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.bikeItem}>
+            <TouchableOpacity style={styles.bikeItem} onPress={() => {
+              let price = 60000
+              price = price + price * 20 / 100
+              setWashPrice(price)
+            }}>
               <Image style={styles.bikeImg} source={bikeSample} />
               <Text style={styles.bikeName}>Sepeda Gunung</Text>
-              <Text style={styles.washPrice}>Rp. 50.000</Text>
+              <Text style={styles.washPrice}>Rp. 60.000</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.bikeItem}>
+            <TouchableOpacity style={styles.bikeItem} onPress={() => {
+              let price = 40000
+              price = price + price * 20 / 100
+              setWashPrice(price)
+            }}>
               <Image style={styles.bikeImg} source={bikeSample} />
               <Text style={styles.bikeName}>Sepeda Gunung</Text>
-              <Text style={styles.washPrice}>Rp. 50.000</Text>
+              <Text style={styles.washPrice}>Rp. 40.000</Text>
             </TouchableOpacity>
           </ScrollView>
         </View>
@@ -110,7 +124,7 @@ return <ActivityIndicator />
         <View style={styles.priceSection}>
           <View>
             <Text style={styles.totalPriceText}>Total Price</Text>
-            <Text style={styles.grandTotal}>Rp. 60.000</Text>
+            <Text style={styles.grandTotal}>Rp. {washPrice.toLocaleString('id', 'ID', {type : 'currency', currency: 'IDR'})}</Text>
           </View>
           <TouchableOpacity style={styles.startBtn} onPress={() => navigation.navigate('LookingWasher')}>
               <Text style={styles.btnText}>Book Now</Text>

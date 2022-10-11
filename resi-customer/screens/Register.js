@@ -30,6 +30,13 @@ import { useState } from 'react';
 export default function Register({navigation}){
     let [hidePassword, setHidePassword] = useState(true)
     let [passIcon, setPassIcon] = useState('eye')
+    let [dataCustomer, setDataCustomer] = useState({
+      name : '',
+      email : '',
+      password : '',
+      profilePictUrl : '',
+      phoneNumber : '',
+    })
 
     let seePassword = () => {
       if(hidePassword){
@@ -77,18 +84,33 @@ export default function Register({navigation}){
           <View style={styles.inputSection}>
             <View style={styles.inputFormContainer}>
               <Text style={styles.label}>Name</Text>
-              <TextInput style={styles.inputForm} placeholder='Input Your Name'></TextInput>
+              <TextInput style={styles.inputForm} placeholder='Input Your Name' onChangeText={(value) => {
+                setDataCustomer({
+                  ...dataCustomer,
+                  name : value
+                })
+              }}></TextInput>
             </View>
 
             <View style={styles.inputFormContainer}>
               <Text style={styles.label}>Email</Text>
-              <TextInput style={styles.inputForm} placeholder='Input Your Email'></TextInput>
+              <TextInput style={styles.inputForm} placeholder='Input Your Email' onChangeText={(value) => {
+                setDataCustomer({
+                  ...dataCustomer,
+                  email : value
+                })
+              }}></TextInput>
             </View>
 
             <View style={styles.inputFormContainer}>
               <Text style={styles.label}>Password</Text>
               <View style={styles.passwordInput}>
-                <TextInput style={styles.inputForm} placeholder='Input Your Password' secureTextEntry={hidePassword}></TextInput>
+                <TextInput style={styles.inputForm} placeholder='Input Your Password' secureTextEntry={hidePassword} onChangeText={(value) => {
+                setDataCustomer({
+                  ...dataCustomer,
+                  password : value
+                })
+              }}></TextInput>
                 <TouchableOpacity style={styles.seePasswordBtn} onPress={() => seePassword()}>
                   <Icon name={passIcon} type='entypo'></Icon>
                 </TouchableOpacity>
@@ -97,17 +119,30 @@ export default function Register({navigation}){
 
             <View style={styles.inputFormContainer}>
               <Text style={styles.label}>Profile Picture URL</Text>
-              <TextInput style={styles.inputForm} placeholder='Input an URL for your profile picture'></TextInput>
+              <TextInput style={styles.inputForm} placeholder='Input an URL for your profile picture' onChangeText={(value) => {
+                setDataCustomer({
+                  ...dataCustomer,
+                  profilePictUrl : value
+                })
+              }}></TextInput>
             </View>
 
             <View style={styles.inputFormContainer}>
               <Text style={styles.label}>Phone Number</Text>
-              <TextInput style={styles.inputForm} placeholder='Input Your Phone Number' keyboardType='number-pad'></TextInput>
+              <TextInput style={styles.inputForm} placeholder='Input Your Phone Number' keyboardType='number-pad' onChangeText={(value) => {
+                setDataCustomer({
+                  ...dataCustomer,
+                  phoneNumber : value
+                })
+              }}></TextInput>
             </View>
           </View>
 
           <View style={styles.btnSection}>
-            <TouchableOpacity style={styles.startBtn} onPress={() => navigation.navigate('Login')}>
+            <TouchableOpacity style={styles.startBtn} onPress={() => {
+              console.log(dataCustomer)
+              navigation.navigate('Home')
+            }}>
                 <Text style={styles.btnText}>Register</Text>
             </TouchableOpacity>
           </View>
