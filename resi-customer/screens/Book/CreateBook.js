@@ -35,13 +35,17 @@ export default function CreateBook({navigation}){
   const [currentAddress, setCurrentAddress] = useState(null)
 
   const [dataBook, setDataBook] = useState({
-    currentLocation : '',
     time : '',
     date : '',
     bikeId: ''
   })
 
-  console.log(dataBook)
+  const [coordinate, setCoordinate] = useState({
+    lon : "",
+    lan : ""
+  })
+
+  console.log(coordinate)
 
   useEffect(() => {
     (async () => {
@@ -54,9 +58,9 @@ export default function CreateBook({navigation}){
 
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location)
-      setDataBook({
-        ...dataBook,
-        currentLocation : location
+      setCoordinate({
+        lon : location.coords.longitude,
+        lan : location.coords.latitude
       })
       let address = await Location.reverseGeocodeAsync(location.coords)
       setCurrentAddress(address[0].street)
@@ -121,12 +125,15 @@ return <ActivityIndicator />
 
         <View style={styles.inputSection}>
           <Text style={styles.label}>Pick Time</Text>
-          <TimeDropDown />
+          <TimeDropDown dataBook = {dataBook} setDataBook = {setDataBook} />
+          {/* 
+            CARA PASS RETURN -> lifting the state up 
+          */}
         </View>
 
         <View style={styles.inputSection}>
           <Text style={styles.labelDate}>Pick Date</Text>
-          <DateDropdown />
+          <DateDropdown dataBook = {dataBook} setDataBook = {setDataBook} />
           {/* <TimeDropDown /> */}
         </View>
 
@@ -184,7 +191,11 @@ return <ActivityIndicator />
             <Text style={styles.totalPriceText}>Total Price</Text>
             <Text style={styles.grandTotal}>Rp. {washPrice.toLocaleString('id', 'ID', {type : 'currency', currency: 'IDR'})}</Text>
           </View>
-          <TouchableOpacity style={styles.startBtn} onPress={() => navigation.navigate('LookingWasher')}>
+          <TouchableOpacity style={styles.startBtn} onPress={() => {
+            console.log(dataBook, "<< ini data book")
+            console.log(coordinate, "<< ini data coordinate terkini customer")
+            navigation.navigate('LookingWasher')
+          }}>
               <Text style={styles.btnText}>Book Now</Text>
           </TouchableOpacity>
         </View>

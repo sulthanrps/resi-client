@@ -5,6 +5,8 @@ import {Icon} from '@rneui/themed'
 import * as Linking from 'expo-linking'
 import {useRef, useState, useEffect} from 'react'
 import * as Location from 'expo-location'
+import MapViewDirections from 'react-native-maps-directions';
+
 
 
 const width = Dimensions.get('window').width
@@ -58,6 +60,13 @@ export default function WasherTracker({navigation}){
       })();
     }, [])
 
+    // useEffect(() => {
+    //   setInterval(() => {
+    //     console.log("get washer position")
+    //   }, 5000)
+    //   // awalnya bisa get sekali setiap 5 detik, cuman di interval kedua, langsung get 3 kali
+    // }, [])
+
     if(!location){
       return (
         <SafeAreaView>
@@ -73,6 +82,24 @@ export default function WasherTracker({navigation}){
           <MapView.Marker coordinate={washerCoor} />
 
           {/* LOGIC MAP DIRECTIONS DISINI */}
+            <MapViewDirections 
+            origin={customerPoint}
+            destination={washerCoor}
+            apikey={"AIzaSyDwfOfj47tLmdHTYEm1sSKV5zAoWukvsvg"}
+            strokeWidth={3}
+            strokeColor="hotpink"
+            optimizeWaypoints={true}
+            onReady={(result) => {
+              mapRef.current.fitToCoordinates(result.coordinates, {
+                edgePadding: {
+                  right: 30,
+                  bottom: 300,
+                  left: 30,
+                  top: 300,
+                },
+              });
+            }}
+            />
         </MapView>
         <View>
           <Text style={styles.title}>Your washer is on their way !</Text>
