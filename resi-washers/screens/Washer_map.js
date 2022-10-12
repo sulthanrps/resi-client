@@ -1,10 +1,75 @@
-import { Text, StyleSheet, View, Dimensions, Image } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  Text,
+  StyleSheet,
+  View,
+  Dimensions,
+  Image,
+  Linking,
+} from "react-native";
 import { Button, Icon } from "react-native-elements";
+import MapView, { Marker } from "react-native-maps";
+import { useState, useRef, useEffect } from "react";
+import MapViewDirections from "react-native-maps-directions";
+import {
+  locationPermission,
+  getCurrentLocation,
+} from "../helpers/helperFunction";
+import * as Location from "expo-location";
 
 const width = Dimensions.get("screen").width;
 const height = Dimensions.get("screen").height;
 export function Washer_map({ navigation }) {
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
+
+  let text = "Waiting..";
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (location) {
+    console.log(location, "dar");
+    text = JSON.stringify(location);
+    console.log(location.coords.latitude, "dari location");
+  }
+  // useEffect(() => {
+  //   getCurrentLocation();
+  // }, []);
+
+  // const getLiveLocation = async () => {
+  //   const locPermissionDenied = await locationPermission();
+  //   if (locPermissionDenied) {
+  //     const res = getCurrentLocation();
+  //     console.log(res, "dari res");
+  //   }
+  // };
+  const [state, setState] = useState({
+    pickupCord: {
+      latitude: location.coords.latitude, //-2.920128961081039,
+      longitude: location.coords.longitude, //104.71986828202549,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    },
+    dropLocation: {
+      latitude: -2.9244042367687273,
+      longitude: 104.71663891758772,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    },
+  });
+  const mapRef = useRef();
+  const { pickupCord, dropLocation } = state;
   return (
     <View style={styles.container}>
       <View style={styles.bodyMessage}>
@@ -42,21 +107,48 @@ export function Washer_map({ navigation }) {
         >
           {" "}
           Ujang codet
-          {"                      "}
+          {"                             "}
         </Text>
         <Button
+          buttonStyle={styles.buttonCall}
           type="solid"
-          title="    Call"
           icon={
-            <Icon name="phone" size={20} color="white" type="font-awesome" />
+            <Icon
+              name="phone"
+              size={20}
+              color="white"
+              type="font-awesome"
+              onPress={() => {
+                Linking.openURL(`tel:${83456789012}`);
+              }}
+            />
           }
-        >
-          {"  "}
-          Call
-        </Button>
+        />
       </View>
       <View style={styles.bodyImage}>
-        <Image
+        <MapView style={styles.map} initialRegion={pickupCord} ref={mapRef}>
+          <Marker coordinate={pickupCord} />
+          <Marker coordinate={dropLocation} />
+          <MapViewDirections
+            origin={pickupCord}
+            destination={dropLocation}
+            apikey={"AIzaSyDwfOfj47tLmdHTYEm1sSKV5zAoWukvsvg"}
+            strokeWidth={3}
+            strokeColor="hotpink"
+            optimizeWaypoints={true}
+            onReady={(result) => {
+              mapRef.current.fitToCoordinates(result.coordinates, {
+                edgePadding: {
+                  right: 30,
+                  bottom: 300,
+                  left: 30,
+                  top: 300,
+                },
+              });
+            }}
+          />
+        </MapView>
+        {/* <Image
           style={{
             resizeMode: "stretch",
             height: 600,
@@ -66,7 +158,7 @@ export function Washer_map({ navigation }) {
           source={{
             uri: "https://i.imgur.com/kFdpCg4.png",
           }}
-        />
+        /> */}
       </View>
       <View style={styles.divFooter}>
         <View style={styles.divProfile}>
@@ -163,7 +255,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     justifyContent: "center",
     alignItems: "center",
-    resizeMode: "contain",
+    // resizeMode: "contain",
   },
   bodyMessage: {
     flex: 2,
@@ -176,5 +268,16 @@ const styles = StyleSheet.create({
     flex: 2,
     marginHorizontal: 10,
     marginTop: 10,
+  },
+  map: {
+    width: Dimensions.get("window").width * 0.95,
+    height: Dimensions.get("window").height * 0.5,
+    borderRadius: 20,
+  },
+  buttonCall: {
+    backgroundColor: "#21c769",
+    width: 40,
+    height: 40,
+    borderRadius: 40 / 2,
   },
 });

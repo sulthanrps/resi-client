@@ -59,7 +59,6 @@ export default function App() {
     return <ActivityIndicator />;
   }
   return (
-
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerTitleAlign: "center" }}>
         <Stack.Screen
@@ -71,7 +70,7 @@ export default function App() {
         <Stack.Screen
           name="Home_washer"
           component={Home_washer}
-          options={{ headerShown: false }}
+          // options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Washer_map"
@@ -105,7 +104,6 @@ export default function App() {
         />
       </Stack.Navigator>
     </NavigationContainer>
-
   );
 }
 

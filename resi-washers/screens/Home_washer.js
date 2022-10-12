@@ -11,6 +11,7 @@ import { useState } from "react";
 import { Overlay, Button, Icon } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ReusableCard } from "./ReusableCard";
+import { locationPermission } from "../helpers/helperFunction";
 
 const width = Dimensions.get("screen").width;
 const height = Dimensions.get("screen").height;
@@ -175,6 +176,7 @@ export function Home_washer({ navigation }) {
                   title="Start Driving"
                   onPress={() => {
                     toggleOverlay;
+                    // locationPermission();
                     navigation.navigate("Washer_map");
                   }}
                 />
