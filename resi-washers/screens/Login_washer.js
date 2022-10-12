@@ -1,9 +1,28 @@
-import { Text, StyleSheet, View, Dimensions, Image } from "react-native";
-import { Input, Button } from "react-native-elements";
+import {
+  Text,
+  StyleSheet,
+  View,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import { Input, Button, Icon } from "react-native-elements";
+import { useState } from "react";
 
 const width = Dimensions.get("screen").width;
 const height = Dimensions.get("screen").height;
 export function Login_washer({ navigation }) {
+  const [hidePassword, setPassword] = useState(true);
+  let [passIcon, setPassIcon] = useState("eye");
+  let seePassword = () => {
+    if (hidePassword) {
+      setPassword(false);
+      setPassIcon("eye-with-line");
+    } else {
+      setPassword(true);
+      setPassIcon("eye");
+    }
+  };
   return (
     <View style={styles.container}>
       <View style={styles.imageLogin}>
@@ -45,7 +64,14 @@ export function Login_washer({ navigation }) {
         </Text>
       </View>
       <View style={styles.inputPassword}>
-        <Input></Input>
+        <Input
+          rightIcon={
+            <TouchableOpacity onPress={() => seePassword()}>
+              <Icon name={passIcon} type="entypo" />
+            </TouchableOpacity>
+          }
+          secureTextEntry={hidePassword}
+        ></Input>
       </View>
 
       <View style={styles.buttonLogin_washer}>

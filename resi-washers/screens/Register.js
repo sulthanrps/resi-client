@@ -1,27 +1,63 @@
-import { Text, StyleSheet, View, Dimensions, ScrollView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Input, Button } from "react-native-elements";
+import {
+  Text,
+  StyleSheet,
+  View,
+  Dimensions,
+  ScrollView,
+  Keyboard,
+  TouchableOpacity,
+} from "react-native";
+import { Input, Button, Icon } from "react-native-elements";
+import { useState } from "react";
+import { axios } from "axios";
 
+const baseUrl = `https://service-user-resi.herokuapp.com/`;
 const width = Dimensions.get("screen").width;
 const height = Dimensions.get("screen").height;
 export function Register({ navigation }) {
+  const [inputs, setInputs] = useState({
+    name: "",
+    email: "",
+    password: "",
+    phoneNumber: "",
+    profileImg: "",
+  });
+  const [hidePassword, setPassword] = useState(true);
+  let [passIcon, setPassIcon] = useState("eye");
+  let seePassword = () => {
+    if (hidePassword) {
+      setPassword(false);
+      setPassIcon("eye-with-line");
+    } else {
+      setPassword(true);
+      setPassIcon("eye");
+    }
+  };
+  const validate = () => {
+    // Keyboard.dismiss();
+    // if (!inputs.email) {
+    // }
+
+    axios
+      .post(`${baseUrl}/register`, inputs)
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handleOnChange = (text, input) => {
+    setInputs({
+      ...inputs,
+      [input]: text,
+    });
+    // setInputs((prevState) => ({ ...prevState, [input]: text }));
+  };
+  console.log(inputs);
   return (
     <ScrollView>
       <View style={styles.container}>
-        {/* <View style={styles.header}>
-            <View>
-              <Text
-                style={{
-                  fontFamily: "Poppins_400Regular",
-                  fontWeight: "bold",
-                  fontSize: 32,
-                  opacity: 0.6,
-                }}
-              >
-                Register
-              </Text>
-            </View>
-          </View> */}
         <View style={styles.labelName}>
           <Text
             style={{
@@ -34,8 +70,7 @@ export function Register({ navigation }) {
           </Text>
         </View>
         <View style={styles.inputName}>
-          {/* <Text>input Name</Text> */}
-          <Input></Input>
+          <Input onChangeText={(text) => handleOnChange(text, "name")}></Input>
         </View>
         <View style={styles.labelEmail}>
           <Text
@@ -49,7 +84,7 @@ export function Register({ navigation }) {
           </Text>
         </View>
         <View style={styles.inputEmail}>
-          <Input></Input>
+          <Input onChangeText={(text) => handleOnChange(text, "email")}></Input>
         </View>
         <View style={styles.labelPassword}>
           <Text
@@ -62,9 +97,19 @@ export function Register({ navigation }) {
             Password
           </Text>
         </View>
+
         <View style={styles.inputPassword}>
-          <Input></Input>
+          <Input
+            rightIcon={
+              <TouchableOpacity onPress={() => seePassword()}>
+                <Icon name={passIcon} type="entypo"></Icon>
+              </TouchableOpacity>
+            }
+            secureTextEntry={hidePassword}
+            onChangeText={(text) => handleOnChange(text, "password")}
+          ></Input>
         </View>
+
         <View style={styles.labelPhoneNumber}>
           <Text
             style={{
@@ -77,7 +122,10 @@ export function Register({ navigation }) {
           </Text>
         </View>
         <View style={styles.inputPhoneNumber}>
-          <Input></Input>
+          <Input
+            keyboardType="numeric"
+            onChangeText={(text) => handleOnChange(text, "phoneNumber")}
+          ></Input>
         </View>
         <View style={styles.labelImgUrl}>
           <Text
@@ -87,18 +135,21 @@ export function Register({ navigation }) {
               fontSize: 20,
             }}
           >
-
-            Profile Image
+            Profile Image URL
           </Text>
         </View>
-        <View style={styles.inputAddress}>
-
-          <Input></Input>
+        <View style={styles.inputImgProfileUrl}>
+          <Input
+            onChangeText={(text) => handleOnChange(text, "profileImg")}
+          ></Input>
         </View>
         <View style={styles.buttonRegister}>
           <Button
             title="Submit"
-            onPress={() => navigation.navigate("Home_washer")}
+            onPress={() => {
+              validate;
+              navigation.navigate("Home_washer");
+            }}
           />
         </View>
       </View>
@@ -147,8 +198,16 @@ const styles = StyleSheet.create({
   },
   inputPassword: {
     flex: 1,
-    elevation: 2,
+    // elevation: 2,
     marginHorizontal: 2,
+  },
+  passwordInput: {
+    flexDirection: "row",
+  },
+  seePasswordBtn: {
+    marginTop: 23,
+    transform: [{ translateX: -35 }],
+    backgroundColor: "red",
   },
   labelPhoneNumber: {
     flex: 1,
@@ -170,7 +229,6 @@ const styles = StyleSheet.create({
     elevation: 2,
 
     marginHorizontal: 2,
-
   },
   buttonRegister: {
     flex: 1,

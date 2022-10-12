@@ -6,7 +6,7 @@ import {
   Image,
   Pressable,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import QRCode from "react-native-qrcode-svg";
 
 const width = Dimensions.get("screen").width;
 const height = Dimensions.get("screen").height;
@@ -26,17 +26,9 @@ export function QR_payment({ navigation }) {
         </Text>
       </View>
       <View style={styles.bodyImage}>
-        <Image
-          style={{
-            resizeMode: "contain",
-            height: 350,
-            width: 350,
-            flex: 1,
-            marginHorizontal: 10,
-          }}
-          source={{
-            uri: "https://cdn.britannica.com/17/155017-050-9AC96FC8/Example-QR-code.jpg",
-          }}
+        <QRCode
+          value="https://www.npmjs.com/package/react-native-qrcode-svg"
+          size={300}
         />
       </View>
       <View style={styles.statusIconTransfer}>
@@ -67,6 +59,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: width,
     height: height,
+    justifyContent: "center",
   },
   bodyImage: {
     flex: 6,
