@@ -37,7 +37,7 @@ const countries = [
     "16:00 - 17:00",
     "17:00 - 18:00",
 ]
-export default function TimeDropDown(){
+export default function TimeDropDown({dataBook, setDataBook}){
     let [fontsLoaded] = useFonts({
         Poppins_100Thin,
         Poppins_100Thin_Italic,
@@ -67,6 +67,10 @@ export default function TimeDropDown(){
             data={countries}
             onSelect={(selectedItem, index) => {
                 console.log(selectedItem, index)
+                setDataBook({
+                    ...dataBook,
+                    time : index + 1
+                })
             }}
             buttonTextAfterSelection={(selectedItem, index) => {
                 // text represented after item is selected
