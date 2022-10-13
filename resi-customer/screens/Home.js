@@ -3,7 +3,7 @@ import bike from '../assets/bike.png'
 import OnGoingBook from '../components/onGoingBook';
 import HistoryBook from '../components/historyBook';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useIsFocused} from '@react-navigation/native'
+import {useIsFocused, useFocusEffect} from '@react-navigation/native'
 
 import { useQuery } from '@apollo/client';
 import { LOGGED_USER } from '../queries';
@@ -11,7 +11,7 @@ import { LOGGED_USER } from '../queries';
 import {Icon} from '@rneui/themed'
 
 import repay from '../assets/repay.png'
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 export default function Home({navigation}){
 
@@ -36,11 +36,21 @@ export default function Home({navigation}){
         console.log(accessToken, "<< dari local state")
     }
 
-    let {data, loading, error} = useQuery(LOGGED_USER, {
+    let {data, loading, error, refetch} = useQuery(LOGGED_USER, {
         variables: {
             getUserAccessToken2 : accessToken
         }
     })
+
+    useFocusEffect(React.useCallback(() => {
+        if(accessToken) {
+            console.log(accessToken, "refetch query")
+            refetch({
+                getUserAccessToken2 : accessToken
+            })
+        }
+    }, []
+    ))
 
     console.log(data, loading, error)
 
