@@ -1,8 +1,10 @@
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, SafeAreaView, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, SafeAreaView, ActivityIndicator, Button } from 'react-native';
 
 import KeyboardAvoidingWrapper from '../components/KeyboardAvoidingWrapper';
 
 import { Icon } from "@rneui/themed";
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
   useFonts,
@@ -26,8 +28,20 @@ import {
   Poppins_900Black_Italic,
 } from "@expo-google-fonts/poppins";
 import { useState } from 'react';
+import { useMutation } from '@apollo/client';
+import { REGISTER } from '../queries';
 
 export default function Register({navigation}){
+    let [Register, {data, loading, error}] = useMutation(REGISTER, {
+      onCompleted: async (data) => {
+        console.log(data, "<< dari register")
+        if(data){
+          let access_token = data.register.access_token
+          await AsyncStorage.setItem('access_token', access_token)
+          navigation.navigate('Home')
+        }
+      }
+    })
     let [hidePassword, setHidePassword] = useState(true)
     let [passIcon, setPassIcon] = useState('eye')
     let [dataCustomer, setDataCustomer] = useState({
@@ -73,6 +87,37 @@ export default function Register({navigation}){
     if(!fontsLoaded){
       return <ActivityIndicator />
     }
+
+    if(loading){
+      return (
+        <SafeAreaView>
+          <ActivityIndicator size='small' color='black' />
+        </SafeAreaView>
+      )
+    }
+
+    if(error){
+      return (
+        <View>
+          <Text>{error}</Text>
+        </View>
+      )
+    }
+
+    function registerSuccess(){
+      console.log(dataCustomer)
+      Register({
+        variables: {
+          name : dataCustomer.name,
+          email: dataCustomer.email,
+          password: dataCustomer.password,
+          profileImg : dataCustomer.profilePictUrl,
+          phoneNumber: dataCustomer.phoneNumber,
+          role : 'Customer'
+        }
+      })
+    }
+
     return (
       <KeyboardAvoidingWrapper>
         <SafeAreaView style={styles.container}>
@@ -138,10 +183,16 @@ export default function Register({navigation}){
             </View>
           </View>
 
+         <View style={styles.toLogin}>
+            <Text style={styles.initial}>Have an account already ?, click</Text>
+            <TouchableOpacity style={styles.toLoginText} onPress={() => navigation.navigate('Login')}>
+              <Text style={styles.toLoginTextBtn}>here</Text>
+            </TouchableOpacity>
+         </View>
+
           <View style={styles.btnSection}>
             <TouchableOpacity style={styles.startBtn} onPress={() => {
-              console.log(dataCustomer)
-              navigation.navigate('Home')
+              registerSuccess()
             }}>
                 <Text style={styles.btnText}>Register</Text>
             </TouchableOpacity>
@@ -214,5 +265,22 @@ const styles = StyleSheet.create({
     seePasswordBtn : {
       marginTop: 23,
       transform: [{translateX: -35}]
+    },
+    toLogin : {
+      display: 'flex',
+      flexDirection: 'row',
+      marginLeft: 25,
+      marginTop: -5,
+      marginBottom: 5
+    },
+    toLoginText : {
+      marginLeft: 3,
+    },
+    toLoginTextBtn: {
+      color: 'blue',
+      fontFamily: 'Poppins_400Regular'
+    },
+    initial : {
+      fontFamily: 'Poppins_400Regular'
     }
 });

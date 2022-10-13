@@ -1,68 +1,109 @@
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, SafeAreaView, ActivityIndicator } from 'react-native';
-import {
-  useFonts,
-  Poppins_100Thin,
-  Poppins_100Thin_Italic,
-  Poppins_200ExtraLight,
-  Poppins_200ExtraLight_Italic,
-  Poppins_300Light,
-  Poppins_300Light_Italic,
-  Poppins_400Regular,
-  Poppins_400Regular_Italic,
-  Poppins_500Medium,
-  Poppins_500Medium_Italic,
-  Poppins_600SemiBold,
-  Poppins_600SemiBold_Italic,
-  Poppins_700Bold,
-  Poppins_700Bold_Italic,
-  Poppins_800ExtraBold,
-  Poppins_800ExtraBold_Italic,
-  Poppins_900Black,
-  Poppins_900Black_Italic,
-} from "@expo-google-fonts/poppins";
-import {useState} from 'react'
-
+import {useEffect, useState} from 'react'
 import KeyboardAvoidingWrapper from '../../components/KeyboardAvoidingWrapper';
+import { useMutation, useQuery } from '@apollo/client';
+import { EDIT_PROFILE, LOGGED_USER } from '../../queries';
+import { useIsFocused } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function EditProfile({navigation}){
   const [dataCustomer, setDataCustomer] = useState({
-    name : 'Asep Kopi',
-    email : 'asepkopi@mail.com',
-    profilePictUrl : 'https://image-url.com',
-    phoneNumber : '08123456789'
+    name : '',
+    email : '',
+    profilePictUrl : '',
+    phoneNumber : ''
   })
 
-  let [fontsLoaded] = useFonts({
-    Poppins_100Thin,
-    Poppins_100Thin_Italic,
-    Poppins_200ExtraLight,
-    Poppins_200ExtraLight_Italic,
-    Poppins_300Light,
-    Poppins_300Light_Italic,
-    Poppins_400Regular,
-    Poppins_400Regular_Italic,
-    Poppins_500Medium,
-    Poppins_500Medium_Italic,
-    Poppins_600SemiBold,
-    Poppins_600SemiBold_Italic,
-    Poppins_700Bold,
-    Poppins_700Bold_Italic,
-    Poppins_800ExtraBold,
-    Poppins_800ExtraBold_Italic,
-    Poppins_900Black,
-    Poppins_900Black_Italic
-});
+  console.log(dataCustomer)
 
-if(!fontsLoaded){
-  return <ActivityIndicator />
-}
+  let [accessToken, setAccessToken] = useState('')
+
+  const getAccessToken = async () => {
+    try {
+        const access_token = await AsyncStorage.getItem('access_token')
+
+        if(access_token !== null){
+            setAccessToken(access_token)
+        }
+
+        else {
+          console.log('access token not found')
+        }
+    } catch (error) {
+        console.log(error)
+    }
+  }
+
+  const isFocused = useIsFocused()
+
+  if(isFocused){
+    getAccessToken()
+    // console.log(accessToken, "<< dari local state profile")
+  }
+
+  const {data, loading, error} = useQuery(LOGGED_USER, {
+    variables : {
+      getUserAccessToken2 : accessToken
+    }
+  })
+
+
+  // console.log(data, loading, error)
+
+  if(loading){
+    return (
+      <SafeAreaView style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center'
+      }}>  
+          <ActivityIndicator size='small' />
+      </SafeAreaView>
+    )
+  }
+
+  if(error){
+      return <Text>Error</Text>
+  }
+
+  // useEffect(() => {
+  //   setDataCustomer({
+  //     name : data?.getUser?.name,
+  //     email : data?.getUser?.email,
+  //     profilePictUrl : data?.getUser?.profileImg,
+  //     phoneNumber : data?.getUser?.phoneNumber,
+  //   })
+  // }, [data])
+
+  // const [Edit, {data: dataEdit, loading : loadingEdit, error : errorEdit}] = useMutation(EDIT_PROFILE, {
+  //   onCompleted: async (data) => {
+  //     console.log(data, "<< dari edit profile")
+  //   }
+  // })
+
+  // function successEdit(){
+  //   console.log(dataCustomer)
+  //   Edit({
+  //     variables : {
+  //       name : dataCustomer.name,
+  //       email : dataCustomer.email,
+  //       profileImg : dataCustomer.profilePictUrl,
+  //       phoneNumber : dataCustomer.phoneNumber,
+  //       accessToken : accessToken,
+  //     }
+  //   })
+  //   navigation.navigate('Profile')
+  // }
+
+  // console.log(data)
+
     return (
       <KeyboardAvoidingWrapper>
         <SafeAreaView style={styles.container}>
           <View style={styles.identitySection}>
             <View style={styles.inputFormContainer}>
               <Text style={styles.label}>Name</Text>
-              <TextInput style={styles.inputForm} defaultValue={dataCustomer.name} onChangeText={(value) => {
+              <TextInput style={styles.inputForm} defaultValue={data?.getUser?.name} onChangeText={(value) => {
                 setDataCustomer({
                   ...dataCustomer,
                   name : value
@@ -72,7 +113,7 @@ if(!fontsLoaded){
 
             <View style={styles.inputFormContainer}>
               <Text style={styles.label}>Email</Text>
-              <TextInput style={styles.inputForm} defaultValue={dataCustomer.email} onChangeText={(value) => {
+              <TextInput style={styles.inputForm} defaultValue={data?.getUser?.email} onChangeText={(value) => {
                 setDataCustomer({
                   ...dataCustomer,
                   email : value
@@ -82,7 +123,7 @@ if(!fontsLoaded){
 
             <View style={styles.inputFormContainer}>
               <Text style={styles.label}>Profile Picture URL</Text>
-              <TextInput style={styles.inputForm} defaultValue={dataCustomer.profilePictUrl} onChangeText={(value) => {
+              <TextInput style={styles.inputForm} defaultValue={data?.getUser?.profileImg} onChangeText={(value) => {
                 setDataCustomer({
                   ...dataCustomer,
                   profilePictUrl : value
@@ -92,7 +133,7 @@ if(!fontsLoaded){
 
             <View style={styles.inputFormContainer}>
               <Text style={styles.label}>Phone Number</Text>
-              <TextInput style={styles.inputForm} defaultValue={dataCustomer.phoneNumber} keyboardType='number-pad' onChangeText={(value) => {
+              <TextInput style={styles.inputForm} defaultValue={data?.getUser?.phoneNumber} keyboardType='number-pad' onChangeText={(value) => {
                 setDataCustomer({
                   ...dataCustomer,
                   phoneNumber : value
@@ -101,7 +142,7 @@ if(!fontsLoaded){
             </View>
           </View>
           <TouchableOpacity style={styles.startBtn} onPress={() => {
-            console.log(dataCustomer)
+            // successEdit()
             navigation.navigate('Profile')
           }}>
               <Text style={styles.btnText}>Save Profile</Text>

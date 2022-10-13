@@ -1,56 +1,69 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image, TextInput, SafeAreaView, ActivityIndicator } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useIsFocused} from '@react-navigation/native'
 import TopUpIllustration from '../../assets/top-up.png'
-import {
-  useFonts,
-  Poppins_100Thin,
-  Poppins_100Thin_Italic,
-  Poppins_200ExtraLight,
-  Poppins_200ExtraLight_Italic,
-  Poppins_300Light,
-  Poppins_300Light_Italic,
-  Poppins_400Regular,
-  Poppins_400Regular_Italic,
-  Poppins_500Medium,
-  Poppins_500Medium_Italic,
-  Poppins_600SemiBold,
-  Poppins_600SemiBold_Italic,
-  Poppins_700Bold,
-  Poppins_700Bold_Italic,
-  Poppins_800ExtraBold,
-  Poppins_800ExtraBold_Italic,
-  Poppins_900Black,
-  Poppins_900Black_Italic,
-} from "@expo-google-fonts/poppins";
-
+import { useMutation } from '@apollo/client';
+import { TOP_UP } from '../../queries';
+import { WebView } from 'react-native-webview';
 import KeyboardAvoidingWrapper from '../../components/KeyboardAvoidingWrapper';
 import { useState } from 'react';
 
 export default function TopUp({navigation}){
   const [topUpAmount, setTopUpAmount] = useState(0)
-  let [fontsLoaded] = useFonts({
-    Poppins_100Thin,
-    Poppins_100Thin_Italic,
-    Poppins_200ExtraLight,
-    Poppins_200ExtraLight_Italic,
-    Poppins_300Light,
-    Poppins_300Light_Italic,
-    Poppins_400Regular,
-    Poppins_400Regular_Italic,
-    Poppins_500Medium,
-    Poppins_500Medium_Italic,
-    Poppins_600SemiBold,
-    Poppins_600SemiBold_Italic,
-    Poppins_700Bold,
-    Poppins_700Bold_Italic,
-    Poppins_800ExtraBold,
-    Poppins_800ExtraBold_Italic,
-    Poppins_900Black,
-    Poppins_900Black_Italic
-  });
+  const [access_token, setAccessToken] = useState('')
 
-  if(!fontsLoaded){
+  const getAccessToken = async () => {
+    try {
+        const access_token = await AsyncStorage.getItem('access_token')
+
+        if(access_token !== null){
+            setAccessToken(access_token)
+        }
+    } catch (error) {
+        console.log(error)
+    }
+  }
+
+  const isFocused = useIsFocused()
+
+  if(isFocused){
+      getAccessToken()
+      console.log(access_token, "<< dari local state")
+  }
+
+  let [TopUp, {data, loading, error}] = useMutation(TOP_UP, {
+    onCompleted: async (data) => {
+      if(data){
+        console.log(data.topUpMidtrans.redirect_url, "dari balikan top up")
+        navigation.navigate('Webview', {url : data.topUpMidtrans.redirect_url})
+      }
+      // if(data){
+      //   return <WebView source={{uri : topUpMidtrans.redirect_url}} />
+      // }
+    }
+  })
+
+  if(loading){
     return <ActivityIndicator />
   }
+
+  if(error){
+    return <Text>Error</Text>
+  }
+
+  function topUpAction(){
+    console.log(typeof(+topUpAmount), "ini amount to top up")
+    console.log(access_token, "ini access_token");
+    TopUp({
+      variables : {
+        nominal: +topUpAmount,
+        accessToken : access_token
+      }
+    })
+
+  }
+
+
     return (
       <KeyboardAvoidingWrapper>
         <SafeAreaView style={styles.container}>
@@ -67,8 +80,9 @@ export default function TopUp({navigation}){
 
 
           <TouchableOpacity style={styles.startBtn} onPress={() => {
-            console.log(topUpAmount);
-            navigation.navigate('Home')
+            // console.log(topUpAmount);
+            // navigation.navigate('Home')
+            topUpAction()
           }}>
               <Text style={styles.btnText}>Top Up</Text>
           </TouchableOpacity>
