@@ -44,3 +44,96 @@ export const TOP_UP = gql`
         }
     }
 `
+
+export const FETCH_BIKES = gql`
+    query Query($accessToken: String) {
+    getBikes(access_token: $accessToken) {
+        id
+        name
+        imgUrl
+        price
+    }
+}
+`
+
+export const CREATE_BOOK = gql`
+    mutation CreateBook(
+        $bookDate: String!, 
+        $bikeId: Int!, 
+        $scheduleId: Int!, 
+        $lon: String!, 
+        $lat: String!, 
+        $accessToken: String, 
+        $grandTotal: Int) 
+        {
+            createBook(BookDate: $bookDate, BikeId: $bikeId, ScheduleId: $scheduleId, lon: $lon, lat: $lat, access_token: $accessToken, GrandTotal: $grandTotal) {
+                id
+            }
+        }
+`
+
+export const GET_BOOK = gql`
+    query Query($accessToken: String) {
+        getBooksPending(access_token: $accessToken) {
+            id
+            UserId
+            BookDate
+            GrandTotal
+            BikeId
+            WasherId
+            ScheduleId
+            status
+            location
+            distance
+            Bike {
+                id
+                name
+                imgUrl
+                price
+            }
+        }
+    }
+`
+
+export const GET_DETAIL_BOOK = gql`
+query GetBooksByBooksId($accessToken: String, $id: ID) {
+  getBooksByBooksId(access_token: $accessToken, id: $id) {
+    id
+    UserId
+    BookDate
+    GrandTotal
+    BikeId
+    WasherId
+    ScheduleId
+    status
+    location
+    Customer {
+      id
+      email
+      name
+      role
+      profileImg
+      balance
+      phoneNumber
+      address
+    }
+    Washer {
+      id
+      email
+      name
+      role
+      profileImg
+      balance
+      phoneNumber
+      address
+    }
+    distance
+    Bike {
+      id
+      name
+      imgUrl
+      price
+    }
+  }
+}
+`

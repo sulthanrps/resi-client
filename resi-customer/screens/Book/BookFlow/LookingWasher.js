@@ -1,17 +1,93 @@
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Image, ActivityIndicator } from 'react-native';
 import lookingDriver from '../../../assets/looking-driver.png'
 import {Icon} from '@rneui/themed'
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useQuery } from '@apollo/client';
+import { GET_DETAIL_BOOK } from '../../../queries';
+import React, { useState } from 'react';
+
 
 export default function LookingWasher({navigation}){
-    useFocusEffect(() => {
-      const timer = setTimeout(() => {
-        // logic re-fetch disini
-        // kalo selama 5 menit gadapet washer, balik ke home
-        navigation.navigate('BookTaken')
-      }, 5000)
-      return () => timer
+    const [accessToken, setAccessToken] = useState('')
+    const [bookId, setBookId] = useState('')
+
+    // console.log(bookId)
+
+    const getAccessToken = async () => {
+        try {
+            const access_token = await AsyncStorage.getItem('access_token')
+
+            if(access_token !== null){
+                setAccessToken(access_token)
+            }
+
+            const bookId = await AsyncStorage.getItem('bookId')
+
+            if(bookId){
+                setBookId(bookId)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const isFocused = useIsFocused()
+
+    if(isFocused){
+        getAccessToken()
+    }
+
+    let {data, loading, error, refetch} = useQuery(GET_DETAIL_BOOK, {
+      variables : {
+        accessToken : accessToken,
+        id : bookId
+      }
     })
+
+    // useFocusEffect(() => {
+    //   setInterval(() => {
+    //     refetch({
+    //       accessToken : accessToken
+    //     })
+    //   }, 10000)
+
+    //   console.log(data?.getBooksByBooksId)
+
+    //   if(data?.getBooksByBooksId?.WasherId){
+    //     navigation.navigate('BookTaken')
+    //   }
+    // })
+
+    useFocusEffect(React.useCallback(() => {
+      setInterval(() => {
+        refetch({
+          accessToken : accessToken
+        })
+      }, 10000)
+
+      console.log(data?.getBooksByBooksId)
+
+      if(data?.getBooksByBooksId?.WasherId){
+        navigation.navigate('BookTaken')
+      }
+    }))
+
+    if(loading){
+      return (
+        <SafeAreaView style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center'
+        }}>  
+            <ActivityIndicator size='small' />
+        </SafeAreaView>
+      )
+    }
+
+    if(error){
+        return <Text>Error</Text>
+    }
     return (
       <SafeAreaView style={styles.container}>
         <Image source={lookingDriver} style={styles.lookingIllustration} />

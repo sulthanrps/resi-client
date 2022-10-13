@@ -49,7 +49,7 @@ export default function Home({navigation}){
                 getUserAccessToken2 : accessToken
             })
         }
-    }, []
+    }, [accessToken]
     ))
 
     console.log(data, loading, error)

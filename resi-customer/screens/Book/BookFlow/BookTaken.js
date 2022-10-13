@@ -1,31 +1,78 @@
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Image, ActivityIndicator } from 'react-native';
 import otw from '../../../assets/otw.png'
 import profilePict from '../../../assets/profile-pict.png'
 import {Icon} from '@rneui/themed'
-import { useFocusEffect } from '@react-navigation/native';
-import * as React from 'react'
 import * as Linking from 'expo-linking'
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useQuery } from '@apollo/client';
+import { GET_DETAIL_BOOK } from '../../../queries';
+import React, { useState } from 'react';
 
 export default function LookingWasher({navigation}){
-    // let isOnGoing = false
-    let [isOnGoing, setIsOnGoing] = React.useState(false)
+  const [accessToken, setAccessToken] = useState('')
+  const [bookId, setBookId] = useState('')
 
-    // logic untuk auto fetching untuk pengecekan
-    // apakah si washer sudah otw ke cust ato belum
+  const getAccessToken = async () => {
+      try {
+          const access_token = await AsyncStorage.getItem('access_token')
 
-    useFocusEffect(
-      React.useCallback(() => {
-        console.log(isOnGoing)
-        setTimeout(() => {
-          setIsOnGoing(true)
-          console.log(isOnGoing)
-        }, 10000)
-          if(isOnGoing){
-            console.log("hai");
-            navigation.navigate('WasherTracker')
+          if(access_token !== null){
+              setAccessToken(access_token)
           }
-      }, [isOnGoing])
+
+          const bookId = await AsyncStorage.getItem('bookId')
+
+          if(bookId){
+              setBookId(bookId)
+          }
+      } catch (error) {
+          console.log(error)
+      }
+  }
+
+  const isFocused = useIsFocused()
+
+  if(isFocused){
+      getAccessToken()
+  }
+
+  let {data, loading, error, refetch} = useQuery(GET_DETAIL_BOOK, {
+    variables : {
+      accessToken : accessToken,
+      id : bookId
+    }
+  })
+
+  useFocusEffect(React.useCallback(() => {
+    setInterval(() => {
+      refetch({
+        accessToken : accessToken
+      })
+    }, 10000)
+
+    console.log(data?.getBooksByBooksId)
+
+    if(data?.getBooksByBooksId?.status == "ongoing"){
+      navigation.navigate('WasherTracker')
+    }
+  }))
+
+  if(loading){
+    return (
+      <SafeAreaView style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center'
+      }}>  
+          <ActivityIndicator size='small' />
+      </SafeAreaView>
     )
+  }
+
+  if(error){
+      return <Text>Error</Text>
+  }
 
     return (
       <SafeAreaView style={styles.container}>
@@ -47,19 +94,19 @@ export default function LookingWasher({navigation}){
             <Text style={styles.cardTime}>10:00 - 11:00</Text>
           </View>
           <View style={styles.rightItem}>
-            <Text style={styles.cardPrice}>Rp. 60.0000</Text>
+            <Text style={styles.cardPrice}>Rp. {data?.getBooksByBooksId?.GrandTotal.toLocaleString('id', 'ID', {type : 'currency', currency :'IDR'})}</Text>
           </View>
         </View>
 
         <View style={styles.washerContainer}>
           <View>
-            <Image source={profilePict} style={styles.profilePict} />
+            <Image source={{uri : data?.getBooksByBooksId?.Washer?.profileImg}} style={styles.profilePict} />
           </View>
           <View style={styles.washerIdentity}>
-            <Text style={styles.name}>Asep Kopi</Text>
+            <Text style={styles.name}>{data?.getBooksByBooksId?.Washer?.name}</Text>
             <Text style={styles.role}>Washer</Text>
           </View>
-          <TouchableOpacity style={styles.callBtn} onPress={() => Linking.openURL('tel:08123456789')}>
+          <TouchableOpacity style={styles.callBtn} onPress={() => Linking.openURL(`tel:${data?.getBooksByBooksId?.Washer?.phoneNumber}`)}>
             <Icon name='call' reverse color='green'></Icon>
           </TouchableOpacity>
         </View>
@@ -174,6 +221,6 @@ const styles = StyleSheet.create({
       color : 'gray'
     },
     callBtn: {
-      marginLeft: '35%'
+      marginLeft: '5%'
     }
 });
