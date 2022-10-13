@@ -25,7 +25,6 @@ import {
   } from "@expo-google-fonts/poppins";
 
 const countries = [
-    "07:00 - 08:00",
     "08:00 - 09:00",
     "09:00 - 10:00",
     "10:00 - 11:00",

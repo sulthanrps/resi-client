@@ -1,72 +1,93 @@
 import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, Image, SafeAreaView, TextInput } from 'react-native';
-import {
-  useFonts,
-  Poppins_100Thin,
-  Poppins_100Thin_Italic,
-  Poppins_200ExtraLight,
-  Poppins_200ExtraLight_Italic,
-  Poppins_300Light,
-  Poppins_300Light_Italic,
-  Poppins_400Regular,
-  Poppins_400Regular_Italic,
-  Poppins_500Medium,
-  Poppins_500Medium_Italic,
-  Poppins_600SemiBold,
-  Poppins_600SemiBold_Italic,
-  Poppins_700Bold,
-  Poppins_700Bold_Italic,
-  Poppins_800ExtraBold,
-  Poppins_800ExtraBold_Italic,
-  Poppins_900Black,
-  Poppins_900Black_Italic,
-} from "@expo-google-fonts/poppins";
-import profilePict from '../../assets/profile-pict.png'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useQuery } from '@apollo/client';
+import { LOGGED_USER } from '../../queries';
+import { useState } from 'react';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function Profile({navigation}){
-  let [fontsLoaded] = useFonts({
-    Poppins_100Thin,
-    Poppins_100Thin_Italic,
-    Poppins_200ExtraLight,
-    Poppins_200ExtraLight_Italic,
-    Poppins_300Light,
-    Poppins_300Light_Italic,
-    Poppins_400Regular,
-    Poppins_400Regular_Italic,
-    Poppins_500Medium,
-    Poppins_500Medium_Italic,
-    Poppins_600SemiBold,
-    Poppins_600SemiBold_Italic,
-    Poppins_700Bold,
-    Poppins_700Bold_Italic,
-    Poppins_800ExtraBold,
-    Poppins_800ExtraBold_Italic,
-    Poppins_900Black,
-    Poppins_900Black_Italic
-});
+  let [accessToken, setAccessToken] = useState('')
 
-if(!fontsLoaded){
-  return <ActivityIndicator />
-}
+  const logout = async () => {
+    try {
+        await AsyncStorage.removeItem('access_token')
+    } catch (error) {
+        console.log(error)
+    }
+  }
+
+  const getAccessToken = async () => {
+    try {
+        const access_token = await AsyncStorage.getItem('access_token')
+
+        if(access_token !== null){
+            setAccessToken(access_token)
+        }
+
+        else {
+          console.log('access token not found')
+        }
+    } catch (error) {
+        console.log(error)
+    }
+  }
+
+  const isFocused = useIsFocused()
+
+  if(isFocused){
+    getAccessToken()
+    console.log(accessToken, "<< dari local state profile")
+  }
+
+  const {data, loading, error} = useQuery(LOGGED_USER, {
+    variables : {
+      getUserAccessToken2 : accessToken
+    }
+  })
+
+  console.log(data, loading, error)
+
+  if(loading){
+    return (
+      <SafeAreaView style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center'
+      }}>  
+          <ActivityIndicator size='small' />
+      </SafeAreaView>
+    )
+  }
+
+  if(error){
+      return <Text>Error</Text>
+  }
+
+  function toLoginPage(){
+    logout()
+    getAccessToken()
+    navigation.navigate('Login')
+  }
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.imgSection}>
-          <Image style={styles.profilePict} source={profilePict} />
+          <Image style={styles.profilePict} source={{uri : data?.getUser?.profileImg}} />
         </View>
 
         <View style={styles.identitySection}>
           <View style={styles.inputFormContainer}>
             <Text style={styles.label}>Name</Text>
-            <TextInput style={styles.inputForm} value='Asep Kopi' editable={false}></TextInput>
+            <TextInput style={styles.inputForm} value={data?.getUser?.name} editable={false}></TextInput>
           </View>
 
           <View style={styles.inputFormContainer}>
             <Text style={styles.label}>Email</Text>
-            <TextInput style={styles.inputForm} value='asepkopi@mail.com' editable={false}></TextInput>
+            <TextInput style={styles.inputForm} value={data?.getUser?.email} editable={false}></TextInput>
           </View>
 
           <View style={styles.inputFormContainer}>
             <Text style={styles.label}>Phone Number</Text>
-            <TextInput style={styles.inputForm} value='08123456789' editable={false}></TextInput>
+            <TextInput style={styles.inputForm} value={data?.getUser?.phoneNumber} editable={false}></TextInput>
           </View>
         </View>
         
@@ -75,7 +96,7 @@ if(!fontsLoaded){
               <Text style={styles.btnText}>Edit Profile</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.startBtn} onPress={() => navigation.navigate('Login')}>
+          <TouchableOpacity style={styles.startBtn} onPress={() => toLoginPage()}>
               <Text style={styles.btnText}>Logout</Text>
           </TouchableOpacity>
         </View>

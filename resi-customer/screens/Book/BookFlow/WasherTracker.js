@@ -3,10 +3,12 @@ import MapView from 'react-native-maps'
 import profilePict from '../../../assets/profile-pict.png'
 import {Icon} from '@rneui/themed'
 import * as Linking from 'expo-linking'
-import {useRef, useState, useEffect} from 'react'
+import React, {useRef, useState, useEffect} from 'react'
 import * as Location from 'expo-location'
-import MapViewDirections from 'react-native-maps-directions';
-
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useQuery } from '@apollo/client';
+import { GET_DETAIL_BOOK } from '../../../queries';
 
 
 const width = Dimensions.get('window').width
@@ -35,6 +37,63 @@ export default function WasherTracker({navigation}){
         longitudeDelta : 0.0421
     })
 
+    // const [washerPoint, setWasherPoint] = useState({
+    //   latitude : 0,
+    //   longitude : 0,
+    //   latitudeDelta : 0.0922,
+    //   longitudeDelta : 0.0421
+    // })
+
+    // const [accessToken, setAccessToken] = useState('')
+    // const [bookId, setBookId] = useState('')
+
+    // const getAccessToken = async () => {
+    //   try {
+    //       const access_token = await AsyncStorage.getItem('access_token')
+
+    //       if(access_token !== null){
+    //           setAccessToken(access_token)
+    //       }
+
+    //       const bookId = await AsyncStorage.getItem('bookId')
+
+    //       if(bookId){
+    //           setBookId(bookId)
+    //       }
+    //   } catch (error) {
+    //       console.log(error)
+    //   }
+    // }
+
+    // const isFocused = useIsFocused()
+
+    // if(isFocused){
+    //     getAccessToken()
+    // }
+
+    // let {data, loading, error, refetch} = useQuery(GET_DETAIL_BOOK, {
+    //   variables : {
+    //     accessToken : accessToken,
+    //     id : bookId
+    //   }
+    // })
+
+    // useFocusEffect(React.useCallback(() => {
+    //   setInterval(() => {
+    //     refetch({
+    //       accessToken : accessToken
+    //     })
+    //   }, 10000)
+
+    //   console.log(data?.getBooksByBooksId)
+
+    //   setWasherPoint({
+    //     latitude : data?.getBooksByBooksId.Washer
+    //   })
+
+    // }))
+
+
     const mapRef = useRef()
 
     const { customerCoor, washerCoor } = state
@@ -60,13 +119,6 @@ export default function WasherTracker({navigation}){
       })();
     }, [])
 
-    // useEffect(() => {
-    //   setInterval(() => {
-    //     console.log("get washer position")
-    //   }, 5000)
-    //   // awalnya bisa get sekali setiap 5 detik, cuman di interval kedua, langsung get 3 kali
-    // }, [])
-
     if(!location){
       return (
         <SafeAreaView>
@@ -75,6 +127,22 @@ export default function WasherTracker({navigation}){
       )
     }
 
+    // if(loading){
+    //   return (
+    //     <SafeAreaView style={{
+    //         flex: 1,
+    //         justifyContent: 'center',
+    //         alignItems: 'center'
+    //     }}>  
+    //         <ActivityIndicator size='small' />
+    //     </SafeAreaView>
+    //   )
+    // }
+
+    // if(error){
+    //     return <Text>Error</Text>
+    // }
+
     return (
       <SafeAreaView style={styles.container}>
         <MapView style={styles.map} initialRegion={customerCoor} ref={mapRef}>
@@ -82,24 +150,7 @@ export default function WasherTracker({navigation}){
           <MapView.Marker coordinate={washerCoor} />
 
           {/* LOGIC MAP DIRECTIONS DISINI */}
-            <MapViewDirections 
-            origin={customerPoint}
-            destination={washerCoor}
-            apikey={"AIzaSyDwfOfj47tLmdHTYEm1sSKV5zAoWukvsvg"}
-            strokeWidth={3}
-            strokeColor="hotpink"
-            optimizeWaypoints={true}
-            onReady={(result) => {
-              mapRef.current.fitToCoordinates(result.coordinates, {
-                edgePadding: {
-                  right: 30,
-                  bottom: 300,
-                  left: 30,
-                  top: 300,
-                },
-              });
-            }}
-            />
+            
         </MapView>
         <View>
           <Text style={styles.title}>Your washer is on their way !</Text>

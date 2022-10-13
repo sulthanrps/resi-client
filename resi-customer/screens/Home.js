@@ -1,65 +1,80 @@
 import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, ActivityIndicator, Image } from 'react-native';
-import profilePicture from '../assets/profile-pict.png'
 import bike from '../assets/bike.png'
 import OnGoingBook from '../components/onGoingBook';
 import HistoryBook from '../components/historyBook';
-import {
-    useFonts,
-    Poppins_100Thin,
-    Poppins_100Thin_Italic,
-    Poppins_200ExtraLight,
-    Poppins_200ExtraLight_Italic,
-    Poppins_300Light,
-    Poppins_300Light_Italic,
-    Poppins_400Regular,
-    Poppins_400Regular_Italic,
-    Poppins_500Medium,
-    Poppins_500Medium_Italic,
-    Poppins_600SemiBold,
-    Poppins_600SemiBold_Italic,
-    Poppins_700Bold,
-    Poppins_700Bold_Italic,
-    Poppins_800ExtraBold,
-    Poppins_800ExtraBold_Italic,
-    Poppins_900Black,
-    Poppins_900Black_Italic,
-  } from "@expo-google-fonts/poppins";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useIsFocused, useFocusEffect} from '@react-navigation/native'
 
-  import {Icon} from '@rneui/themed'
+import { useQuery } from '@apollo/client';
+import { LOGGED_USER } from '../queries';
 
-  import repay from '../assets/repay.png'
+import {Icon} from '@rneui/themed'
+
+import repay from '../assets/repay.png'
+import React, { useState } from 'react';
 
 export default function Home({navigation}){
-    let [fontsLoaded] = useFonts({
-        Poppins_100Thin,
-        Poppins_100Thin_Italic,
-        Poppins_200ExtraLight,
-        Poppins_200ExtraLight_Italic,
-        Poppins_300Light,
-        Poppins_300Light_Italic,
-        Poppins_400Regular,
-        Poppins_400Regular_Italic,
-        Poppins_500Medium,
-        Poppins_500Medium_Italic,
-        Poppins_600SemiBold,
-        Poppins_600SemiBold_Italic,
-        Poppins_700Bold,
-        Poppins_700Bold_Italic,
-        Poppins_800ExtraBold,
-        Poppins_800ExtraBold_Italic,
-        Poppins_900Black,
-        Poppins_900Black_Italic
-    });
 
-    if(!fontsLoaded){
-    return <ActivityIndicator />
+    const [accessToken, setAccessToken] = useState('')
+
+    const getAccessToken = async () => {
+        try {
+            const access_token = await AsyncStorage.getItem('access_token')
+
+            if(access_token !== null){
+                setAccessToken(access_token)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const isFocused = useIsFocused()
+
+    if(isFocused){
+        getAccessToken()
+        console.log(accessToken, "<< dari local state")
+    }
+
+    let {data, loading, error, refetch} = useQuery(LOGGED_USER, {
+        variables: {
+            getUserAccessToken2 : accessToken
+        }
+    })
+
+    useFocusEffect(React.useCallback(() => {
+        if(accessToken) {
+            console.log(accessToken, "refetch query")
+            refetch({
+                getUserAccessToken2 : accessToken
+            })
+        }
+    }, [accessToken]
+    ))
+
+    console.log(data, loading, error)
+
+    if(loading){
+        return (
+        <SafeAreaView style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center'
+        }}>  
+            <ActivityIndicator size='small' />
+        </SafeAreaView>
+        )
+    }
+
+    if(error){
+        return <Text>Error</Text>
     }
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-            <Text style={styles.greetText}>Welcome back, Asep !</Text>
+            <Text style={styles.greetText}>Welcome back, {data?.getUser?.name} !</Text>
             <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-                <Image style={styles.profilePict} source={profilePicture} />
+                <Image style={styles.profilePict} source={{uri: data?.getUser?.profileImg}} />
             </TouchableOpacity>
         </View>
 
@@ -69,7 +84,7 @@ export default function Home({navigation}){
             </View>
             <View style={styles.repayBalanceContainer}>
                 <Text style={styles.repayTitle}>Repay</Text>
-                <Text style={styles.repayBalance}>Rp. 150.000</Text>
+                <Text style={styles.repayBalance}>Rp. {data?.getUser?.balance.toLocaleString('id', 'ID' , {type : 'currency', currency: 'IDR'})}</Text>
             </View>
             <View style={styles.addBtnContainer}>
                 <TouchableOpacity style={styles.addBtn} onPress={() => navigation.navigate('TopUp')}>

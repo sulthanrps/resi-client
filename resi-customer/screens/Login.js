@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, SafeAreaView, ActivityIndicator, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, SafeAreaView, ActivityIndicator, Image, Alert } from 'react-native';
 import KeyboardAvoidingWrapper from '../components/KeyboardAvoidingWrapper';
 import { Icon } from "@rneui/themed";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   useFonts,
   Poppins_100Thin,
@@ -25,8 +26,21 @@ import {
 
 import login from '../assets/login.png'
 import { useState } from 'react';
+import { useMutation } from '@apollo/client';
+import { LOGIN } from '../queries';
 
 export default function Login({navigation}){
+
+    let [Login, {data, loading, error}] = useMutation(LOGIN, {
+      onCompleted: async (data) => {
+        console.log(data)
+        if(data){
+          let accessToken = data.login.access_token
+          await AsyncStorage.setItem('access_token', accessToken)
+          navigation.navigate('Home')
+        }
+      }
+    })
 
     let [hidePassword, setHidePassword] = useState(true)
     let [passIcon, setPassIcon] = useState('eye')
@@ -73,6 +87,38 @@ export default function Login({navigation}){
     if(!fontsLoaded){
       return <ActivityIndicator />
     }
+
+    // WIRING APOLLO CLIENT
+
+    if(loading){
+      return (
+        <SafeAreaView>
+          <ActivityIndicator size='small' color='black' />
+        </SafeAreaView>
+      )
+    }
+
+    if(error){
+      return (
+        <View>
+          <Text>{error}</Text>
+        </View>
+      )
+    }
+
+    function loginSuccess(){
+      console.log(dataLogin)
+      Login({
+        variables: {
+          email: dataLogin.email,
+          password: dataLogin.password
+        }
+      })
+    }
+
+    // ERROR -> GAMAU AUT0 KE HOME KARENA PAS KLIK TOMBOL LOGIN, DATA BELUM ADA (MASIH DI LOADING STATE)
+    // CARA SOLVE EITHER PAKE USE STATE BUAT NYIMPEN DATANTA, TERUS 
+
     return (
 
       <KeyboardAvoidingWrapper>
@@ -116,8 +162,8 @@ export default function Login({navigation}){
 
         <View style={styles.btnSection}>
           <TouchableOpacity style={styles.startBtn} onPress={() => {
-            console.log(dataLogin)
-            navigation.navigate('Home')
+            loginSuccess()
+            // navigation.navigate('Home')
           }}>
               <Text style={styles.btnText}>Login</Text>
           </TouchableOpacity>

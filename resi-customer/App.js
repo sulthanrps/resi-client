@@ -14,12 +14,16 @@ import BookTaken from './screens/Book/BookFlow/BookTaken';
 import WasherTracker from './screens/Book/BookFlow/WasherTracker';
 import SuccessPay from './screens/Book/BookFlow/SuccessPay';
 import ScanBarcode from './screens/Book/BookFlow/ScanBarcode';
+import { ApolloProvider } from '@apollo/client';
+import client from './config/apolloConnection';
+import Webview from './screens/Profile/Webview';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
+    <ApolloProvider client={client}>
+      <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen options={{
           headerShown: false
@@ -59,8 +63,11 @@ export default function App() {
         <Stack.Screen options={{
           headerShown: false
         }} name='SuccessPay' component={SuccessPay}></Stack.Screen>
+        <Stack.Screen name='Webview' component={Webview}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
+    </ApolloProvider>
+    
   );
 }
 
