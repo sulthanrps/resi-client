@@ -44,52 +44,49 @@ export default function WasherTracker({navigation}){
     //   longitudeDelta : 0.0421
     // })
 
-    // const [accessToken, setAccessToken] = useState('')
-    // const [bookId, setBookId] = useState('')
+    const [accessToken, setAccessToken] = useState('')
+    const [bookId, setBookId] = useState('')
 
-    // const getAccessToken = async () => {
-    //   try {
-    //       const access_token = await AsyncStorage.getItem('access_token')
+    const getAccessToken = async () => {
+      try {
+          const access_token = await AsyncStorage.getItem('access_token')
 
-    //       if(access_token !== null){
-    //           setAccessToken(access_token)
-    //       }
+          if(access_token !== null){
+              setAccessToken(access_token)
+          }
 
-    //       const bookId = await AsyncStorage.getItem('bookId')
+          const bookId = await AsyncStorage.getItem('bookId')
 
-    //       if(bookId){
-    //           setBookId(bookId)
-    //       }
-    //   } catch (error) {
-    //       console.log(error)
-    //   }
-    // }
+          if(bookId){
+              setBookId(bookId)
+          }
+      } catch (error) {
+          console.log(error)
+      }
+    }
 
-    // const isFocused = useIsFocused()
+    const isFocused = useIsFocused()
 
-    // if(isFocused){
-    //     getAccessToken()
-    // }
+    if(isFocused){
+        getAccessToken()
+    }
 
-    // let {data, loading, error, refetch} = useQuery(GET_DETAIL_BOOK, {
-    //   variables : {
-    //     accessToken : accessToken,
-    //     id : bookId
-    //   }
-    // })
+    let {data, loading, error, refetch} = useQuery(GET_DETAIL_BOOK, {
+      variables : {
+        accessToken : accessToken,
+        id : bookId
+      }
+    })
 
     // useFocusEffect(React.useCallback(() => {
     //   setInterval(() => {
     //     refetch({
-    //       accessToken : accessToken
+    //       accessToken : accessToken,
+    //       id: bookId
     //     })
     //   }, 10000)
 
     //   console.log(data?.getBooksByBooksId)
-
-    //   setWasherPoint({
-    //     latitude : data?.getBooksByBooksId.Washer
-    //   })
 
     // }))
 
@@ -127,21 +124,21 @@ export default function WasherTracker({navigation}){
       )
     }
 
-    // if(loading){
-    //   return (
-    //     <SafeAreaView style={{
-    //         flex: 1,
-    //         justifyContent: 'center',
-    //         alignItems: 'center'
-    //     }}>  
-    //         <ActivityIndicator size='small' />
-    //     </SafeAreaView>
-    //   )
-    // }
+    if(loading){
+      return (
+        <SafeAreaView style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center'
+        }}>  
+            <ActivityIndicator size='small' />
+        </SafeAreaView>
+      )
+    }
 
-    // if(error){
-    //     return <Text>Error</Text>
-    // }
+    if(error){
+        return <Text>Error</Text>
+    }
 
     return (
       <SafeAreaView style={styles.container}>
@@ -157,13 +154,13 @@ export default function WasherTracker({navigation}){
         </View>
         <View style={styles.washerContainer}>
               <View>
-                <Image source={profilePict} style={styles.profilePict} />
+                <Image source={{uri : data?.getBooksByBooksId?.Washer.profileImg}} style={styles.profilePict} />
               </View>
               <View style={styles.washerIdentity}>
-                <Text style={styles.name}>Asep Kopi</Text>
+                <Text style={styles.name}>{data?.getBooksByBooksId?.Washer?.name}</Text>
                 <Text style={styles.role}>Washer</Text>
               </View>
-              <TouchableOpacity style={styles.callBtn} onPress={() => Linking.openURL('tel:08123456789')}>
+              <TouchableOpacity style={styles.callBtn} onPress={() => Linking.openURL(`tel:${data?.getBooksByBooksId?.Washer?.phoneNumber}`)}>
                 <Icon name='call' reverse color='green'></Icon>
               </TouchableOpacity>
             </View>
@@ -230,11 +227,12 @@ const styles = StyleSheet.create({
       color : 'gray'
     },
     callBtn: {
-      marginLeft: '35%'
+      marginLeft: '43%'
     },
     profilePict : {
       width: 55,
-      height: 55
+      height: 55,
+      borderRadius: 50
     },
     title: {
       fontFamily: 'Poppins_600SemiBold',
