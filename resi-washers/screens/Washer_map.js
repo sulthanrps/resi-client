@@ -5,22 +5,90 @@ import {
   Dimensions,
   Image,
   Linking,
+  ActivityIndicator,
 } from "react-native";
 import { Button, Icon } from "react-native-elements";
 import MapView, { Marker } from "react-native-maps";
 import { useState, useRef, useEffect } from "react";
+import { useMutation, useQuery } from "@apollo/client";
+import { GET_USER, GET_ORDER, BOOK_TAKEN_BY_ID } from "../queries";
+import { INPUT_WASHER_ID } from "../queries";
 import MapViewDirections from "react-native-maps-directions";
 import {
   locationPermission,
   getCurrentLocation,
 } from "../helpers/helperFunction";
 import * as Location from "expo-location";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const width = Dimensions.get("screen").width;
 const height = Dimensions.get("screen").height;
 export function Washer_map({ navigation }) {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [access_token, setAccess] = useState("");
+  const {
+    loading: loadingOrder,
+    error: errorOrder,
+    data: dataOrder,
+    refetch: refetchOrder,
+  } = useQuery(GET_ORDER, {
+    variables: {
+      accessToken: access_token,
+      lon: `${location?.coords?.longitude || 0}`,
+      lat: `${location?.coords?.latitude || 0}`,
+      dist: 2,
+    },
+    onCompleted: () => {
+      console.log("masuk");
+    },
+  });
+  // const [
+  //   washerPickBook,
+  //   {
+  //     loading: loadingInputWasher,
+  //     error: errorInputWasher,
+  //     data: dataInputWasher,
+  //   },
+  // ] = useMutation(INPUT_WASHER_ID, {
+  //   variables: {
+  //     washerPickBookId: dataOrder.getWasherBooksPending.id,
+  //     accessToken: access_token,
+  //   },
+  // });
+  // sebelum data
+  // const {
+  //   loading: loadingBookTaken,
+  //   error: errorBookTaken,
+  //   data: dataBookTaken,
+  // } = useQuery(BOOK_TAKEN_BY_ID, {
+  //   variables: { accessToken: access_token, getWasherBooksByBooksIdId },
+  // });
+  const [state, setState] = useState({
+    pickupCord: {
+      latitude: -8.681873, //-2.920128961081039,
+      longitude: 115.196567, //104.71986828202549,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    },
+    dropLocation: {
+      latitude: -8.67755333483601,
+      longitude: 115.20096953853496,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    },
+  });
+  console.log(location, "locatioin washer map");
+  const mapRef = useRef();
+  const { pickupCord, dropLocation } = state;
+  useEffect(() => {
+    AsyncStorage.getItem("access_token").then((res) => {
+      setAccess(res);
+    });
+  }, []);
+  const { loading, error, data } = useQuery(GET_USER, {
+    variables: { accessToken: access_token },
+  });
 
   useEffect(() => {
     (async () => {
@@ -35,41 +103,27 @@ export function Washer_map({ navigation }) {
     })();
   }, []);
 
-  let text = "Waiting..";
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    console.log(location, "dar");
-    text = JSON.stringify(location);
-    console.log(location.coords.latitude, "dari location");
+  if (loading) {
+    return <ActivityIndicator size="large" color="#00ff00" />;
   }
-  // useEffect(() => {
-  //   getCurrentLocation();
-  // }, []);
-
-  // const getLiveLocation = async () => {
-  //   const locPermissionDenied = await locationPermission();
-  //   if (locPermissionDenied) {
-  //     const res = getCurrentLocation();
-  //     console.log(res, "dari res");
-  //   }
-  // };
-  const [state, setState] = useState({
-    pickupCord: {
-      latitude: location.coords.latitude, //-2.920128961081039,
-      longitude: location.coords.longitude, //104.71986828202549,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    },
-    dropLocation: {
-      latitude: -2.9244042367687273,
-      longitude: 104.71663891758772,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    },
-  });
-  const mapRef = useRef();
-  const { pickupCord, dropLocation } = state;
+  if (error) console.log(error);
+  if (!location) {
+    return <ActivityIndicator size="large" color="#00ff00" />;
+  }
+  if (loadingOrder) {
+    return <ActivityIndicator size="large" color="#00ff00" />;
+  }
+  // if (errorOrder) console.log(error);
+  // if (loadingInputWasher) {
+  //   return <ActivityIndicator size="large" color="#00ff00" />;
+  // }
+  // if (errorInputWasher) {
+  //   return <ActivityIndicator size="large" color="#00ff00" />;
+  // }
+  console.log(location, "location");
+  console.log(data, "dari data maps");
+  console.log(dataOrder, "dari data order map");
+  // console.log(dataInputWasher, "dari edit washerid");
   return (
     <View style={styles.container}>
       <View style={styles.bodyMessage}>
@@ -93,7 +147,7 @@ export function Washer_map({ navigation }) {
               borderRadius: 10,
             }}
             source={{
-              uri: "https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_0.jpg",
+              uri: `https://oliver-andersen.se/wp-content/uploads/2018/03/cropped-Profile-Picture-Round-Color.png`,
             }}
           />
         </View>
@@ -106,8 +160,8 @@ export function Washer_map({ navigation }) {
           }}
         >
           {" "}
-          Ujang codet
-          {"                             "}
+          Val
+          {"  "}
         </Text>
         <Button
           buttonStyle={styles.buttonCall}
@@ -119,7 +173,7 @@ export function Washer_map({ navigation }) {
               color="white"
               type="font-awesome"
               onPress={() => {
-                Linking.openURL(`tel:${83456789012}`);
+                Linking.openURL(`tel:${data.phoneNumber}`);
               }}
             />
           }
@@ -129,7 +183,7 @@ export function Washer_map({ navigation }) {
         <MapView style={styles.map} initialRegion={pickupCord} ref={mapRef}>
           <Marker coordinate={pickupCord} />
           <Marker coordinate={dropLocation} />
-          <MapViewDirections
+          {/* <MapViewDirections
             origin={pickupCord}
             destination={dropLocation}
             apikey={"AIzaSyDwfOfj47tLmdHTYEm1sSKV5zAoWukvsvg"}
@@ -146,7 +200,7 @@ export function Washer_map({ navigation }) {
                 },
               });
             }}
-          />
+          /> */}
         </MapView>
         {/* <Image
           style={{

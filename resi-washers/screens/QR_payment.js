@@ -3,14 +3,65 @@ import {
   StyleSheet,
   View,
   Dimensions,
-  Image,
   Pressable,
+  ActivityIndicator,
 } from "react-native";
+import { useState, useEffect } from "react";
 import QRCode from "react-native-qrcode-svg";
+import { GET_ORDER } from "../queries";
+import { useQuery } from "@apollo/client";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Location from "expo-location";
 
 const width = Dimensions.get("screen").width;
 const height = Dimensions.get("screen").height;
 export function QR_payment({ navigation }) {
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [access_token, setAccess] = useState("");
+  const {
+    loading: loadingOrder,
+    error: errorOrder,
+    data: dataOrder,
+    refetch: refetchOrder,
+  } = useQuery(GET_ORDER, {
+    variables: {
+      accessToken: access_token,
+      lon: `${location?.coords?.longitude || 0}`,
+      lat: `${location?.coords?.latitude || 0}`,
+      dist: 2,
+    },
+    onCompleted: () => {
+      console.log("masuk");
+    },
+  });
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
+  useEffect(() => {
+    AsyncStorage.getItem("access_token").then((res) => {
+      setAccess(res);
+    });
+  }, []);
+  if (loadingOrder) {
+    return <ActivityIndicator size="large" color="#00ff00" />;
+  }
+  if (errorOrder) console.log(error);
+  if (!location) {
+    return <ActivityIndicator size="large" color="#00ff00" />;
+  }
+  console.log(dataOrder, "dari QR code");
+  console.log(access_token, "dari QR cide");
+
   return (
     <View style={styles.container}>
       <View style={styles.bodyMessage}>
@@ -27,7 +78,7 @@ export function QR_payment({ navigation }) {
       </View>
       <View style={styles.bodyImage}>
         <QRCode
-          value="https://www.npmjs.com/package/react-native-qrcode-svg"
+          value={`https://service-app-resi.herokuapp.com/customers/${dataOrder.getWasherBooksPending[0].id}?access_token=${access_token}`}
           size={300}
         />
       </View>

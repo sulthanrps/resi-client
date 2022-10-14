@@ -25,7 +25,54 @@ export function ReusableCard() {
               color: "#9F9F9F",
             }}
           >
-            Asep Gigi
+            Marcus
+          </Text>
+          <Text
+            style={{
+              fontFamily: "Poppins_400Regular",
+              fontWeight: "bold",
+              fontSize: 14,
+              color: "#9F9F9F",
+            }}
+          >
+            Jalan. Imam Bonjol
+          </Text>
+        </View>
+
+        <View style={styles.ColumnBookTakenRight}>
+          <Text
+            style={{
+              fontFamily: "Poppins_400Regular",
+              fontWeight: "bold",
+              fontSize: 24,
+              marginLeft: 10,
+              color: "#55BC05",
+            }}
+          >
+            Done
+          </Text>
+        </View>
+      </View>
+      <View style={styles.divBookTaken}>
+        <View style={styles.ColumnBookTakenLeft}>
+          <Text
+            style={{
+              fontFamily: "Poppins_400Regular",
+              fontWeight: "bold",
+              fontSize: 20,
+            }}
+          >
+            Fixie Bike
+          </Text>
+          <Text
+            style={{
+              fontFamily: "Poppins_400Regular",
+              fontWeight: "bold",
+              fontSize: 14,
+              color: "#9F9F9F",
+            }}
+          >
+            Ikhsan
           </Text>
           <Text
             style={{
@@ -62,7 +109,7 @@ export function ReusableCard() {
               fontSize: 20,
             }}
           >
-            BMX Bike
+            Mountain Bike
           </Text>
           <Text
             style={{
@@ -72,54 +119,7 @@ export function ReusableCard() {
               color: "#9F9F9F",
             }}
           >
-            Asep Gigi
-          </Text>
-          <Text
-            style={{
-              fontFamily: "Poppins_400Regular",
-              fontWeight: "bold",
-              fontSize: 14,
-              color: "#9F9F9F",
-            }}
-          >
-            Jalan. SIsingamangaraja
-          </Text>
-        </View>
-
-        <View style={styles.ColumnBookTakenRight}>
-          <Text
-            style={{
-              fontFamily: "Poppins_400Regular",
-              fontWeight: "bold",
-              fontSize: 24,
-              marginLeft: 10,
-              color: "#55BC05",
-            }}
-          >
-            Done
-          </Text>
-        </View>
-      </View>
-      <View style={styles.divBookTaken}>
-        <View style={styles.ColumnBookTakenLeft}>
-          <Text
-            style={{
-              fontFamily: "Poppins_400Regular",
-              fontWeight: "bold",
-              fontSize: 20,
-            }}
-          >
-            BMX Bike
-          </Text>
-          <Text
-            style={{
-              fontFamily: "Poppins_400Regular",
-              fontWeight: "bold",
-              fontSize: 14,
-              color: "#9F9F9F",
-            }}
-          >
-            Asep Gigi
+            Fikri
           </Text>
           <Text
             style={{

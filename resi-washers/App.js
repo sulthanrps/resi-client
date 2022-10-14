@@ -1,5 +1,4 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
+import { StyleSheet, ActivityIndicator } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Register } from "./screens/Register";
@@ -11,6 +10,8 @@ import { QR_payment } from "./screens/QR_payment";
 import { Washer_map } from "./screens/Washer_map";
 import { Home_washer } from "./screens/Home_washer";
 import { LandingPage } from "./screens/LandingPage";
+import { ApolloProvider } from "@apollo/client";
+import client from "./config";
 import {
   useFonts,
   Poppins_100Thin,
@@ -59,51 +60,56 @@ export default function App() {
     return <ActivityIndicator />;
   }
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerTitleAlign: "center" }}>
-        <Stack.Screen
-          name="LandingPage"
-          component={LandingPage}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="Register" component={Register} />
-        <Stack.Screen
-          name="Home_washer"
-          component={Home_washer}
-          // options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Washer_map"
-          component={Washer_map}
-          options={{ title: "Map" }}
-        />
-        <Stack.Screen
-          name="QR_payment"
-          component={QR_payment}
-          options={{ title: "QR Payment" }}
-        />
-        <Stack.Screen
-          name="Payment_success"
-          component={Payment_success}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Profile_washer"
-          component={Profile_washer}
-          options={{ title: "My Profile" }}
-        />
-        <Stack.Screen
-          name="Edit_profile_washer"
-          component={Edit_profile_washer}
-          options={{ title: "Edit Profile" }}
-        />
-        <Stack.Screen
-          name="Login_washer"
-          component={Login_washer}
-          options={{ title: "Login" }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <ApolloProvider client={client}>
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{ headerTitleAlign: "center" }}
+          // initialRouteName="Login_washer"
+        >
+          <Stack.Screen
+            name="LandingPage"
+            component={LandingPage}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="Register" component={Register} />
+          <Stack.Screen
+            name="Home_washer"
+            component={Home_washer}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Washer_map"
+            component={Washer_map}
+            options={{ title: "Map" }}
+          />
+          <Stack.Screen
+            name="QR_payment"
+            component={QR_payment}
+            options={{ title: "QR Payment" }}
+          />
+          <Stack.Screen
+            name="Payment_success"
+            component={Payment_success}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Profile_washer"
+            component={Profile_washer}
+            options={{ title: "My Profile" }}
+          />
+          <Stack.Screen
+            name="Edit_profile_washer"
+            component={Edit_profile_washer}
+            options={{ title: "Edit Profile" }}
+          />
+          <Stack.Screen
+            name="Login_washer"
+            component={Login_washer}
+            options={{ title: "Login" }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ApolloProvider>
   );
 }
 

@@ -1,9 +1,71 @@
-import { Text, StyleSheet, View, Dimensions, Image } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  View,
+  Dimensions,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import { Input, Button } from "react-native-elements";
+import { useQuery, useMutation } from "@apollo/client";
+import { GET_USER } from "../queries";
+import { EDIT_USER } from "../queries";
+import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const width = Dimensions.get("screen").width;
 const height = Dimensions.get("screen").height;
 export function Edit_profile_washer({ navigation }) {
+  const [inputs, setInputs] = useState({
+    name: "",
+    email: "",
+    phoneNumber: "",
+    profileImg: "",
+  });
+  console.log(inputs, "dariinput");
+  const [access_token, setAccess] = useState("");
+  useEffect(() => {
+    AsyncStorage.getItem("access_token").then((res) => {
+      setAccess(res);
+    });
+  });
+  const { loading, error, data } = useQuery(GET_USER, {
+    variables: { accessToken: access_token },
+  });
+  if (loading) {
+    return <ActivityIndicator size="large" color="#00ff00" />;
+  }
+  if (error) console.log(error);
+  // useEffect(() => {
+  //   setInputs({
+  //     name: data.getUser.name,
+  //   });
+  // }, []);
+  // const [updateProfile, { loading: loadingEdit, error: errorEdit }] =
+  //   useMutation(EDIT_USER, {
+  //     onCompleted: async (data) => {
+  //       console.log(data, "dari sehabis edit");
+  //       navigation.navigate("Profile_washer");
+  //     },
+  //   });
+  // if (loadingEdit) {
+  //   return <ActivityIndicator size="large" color="#00ff00" />;
+  // }
+  // if (errorEdit) console.log(errorEdit);
+
+  // const handleOnChange = (text, input) => {
+  //   setInputs({
+  //     ...inputs,
+  //     [input]: text,
+  //   });
+  // };
+  // console.log(inputs, "dari luar");
+  const handleSubmit = () => {
+    // console.log(inputs, "dari submit");
+    // login({
+    //   variables: inputs,
+    // });
+  };
   return (
     <View style={styles.container}>
       <View style={styles.divProfile}>
@@ -11,10 +73,9 @@ export function Edit_profile_washer({ navigation }) {
           <Image
             style={styles.imgProfile}
             source={{
-              uri: "https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_0.jpg",
+              uri: `${data.getUser.profileImg}`,
             }}
           />
-
         </View>
       </View>
       <View style={styles.labelName}>
@@ -30,7 +91,10 @@ export function Edit_profile_washer({ navigation }) {
       </View>
       <View style={styles.inputName}>
         {/* <Text>input Name</Text> */}
-        <Input placeholder="Asep Gigi"></Input>
+        <Input
+          placeholder={`${data.getUser.name}`}
+          onChangeText={(text) => setInputs({ ...inputs, name: text })}
+        ></Input>
       </View>
       <View style={styles.labelPassword}>
         <Text
@@ -40,11 +104,14 @@ export function Edit_profile_washer({ navigation }) {
             fontSize: 20,
           }}
         >
-          Password
+          Email
         </Text>
       </View>
       <View style={styles.inputPassword}>
-        <Input placeholder="*******"></Input>
+        <Input
+          placeholder={`${data.getUser.email}`}
+          onChangeText={(text) => setInputs({ ...inputs, email: text })}
+        ></Input>
       </View>
       <View style={styles.labelPhoneNumber}>
         <Text
@@ -58,7 +125,10 @@ export function Edit_profile_washer({ navigation }) {
         </Text>
       </View>
       <View style={styles.inputPhoneNumber}>
-        <Input placeholder="081234567"></Input>
+        <Input
+          placeholder={`${data.getUser.phoneNumber}`}
+          onChangeText={(text) => setInputs({ ...inputs, phoneNumber: text })}
+        ></Input>
       </View>
       <View style={styles.labelAddress}>
         <Text
@@ -72,13 +142,13 @@ export function Edit_profile_washer({ navigation }) {
         </Text>
       </View>
       <View style={styles.inputAddress}>
-        <Input placeholder="http://bluedragon.com"></Input>
+        <Input
+          placeholder={`${data.getUser.profileImg}`}
+          onChangeText={(text) => setInputs({ ...inputs, profileImg: text })}
+        ></Input>
       </View>
       <View style={styles.buttonRegister}>
-        <Button
-          title="Submit"
-          onPress={() => navigation.navigate("Profile_washer")}
-        />
+        <Button title="Submit" onPress={handleSubmit} />
       </View>
     </View>
   );
@@ -128,7 +198,6 @@ const styles = StyleSheet.create({
     height: 100,
     width: 100,
     borderRadius: 100 / 2,
-
   },
   labelPassword: {
     flex: 1,

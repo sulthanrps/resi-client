@@ -1,10 +1,60 @@
-import { Text, StyleSheet, View, Dimensions, Image } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  View,
+  Dimensions,
+  Image,
+  ActivityIndicator,
+  Alert,
+} from "react-native";
 import { Button, Icon } from "react-native-elements";
-
+import { useQuery } from "@apollo/client";
+import { GET_USER } from "../queries";
+import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const width = Dimensions.get("screen").width;
 const height = Dimensions.get("screen").height;
 export function Profile_washer({ navigation }) {
+  const [access_token, setAccess] = useState("");
+  useEffect(() => {
+    AsyncStorage.getItem("access_token").then((res) => {
+      setAccess(res);
+    });
+  });
+  const { loading, error, data } = useQuery(GET_USER, {
+    variables: { accessToken: access_token },
+  });
+  if (loading) {
+    return <ActivityIndicator size="large" color="#00ff00" />;
+  }
+  if (error) console.log(error);
+
+  // const LogOut = () =>
+  //   Alert.alert(
+  //     "Are you sure want to Log Out ?",
+  //     [
+  //       {
+  //         text: "Cancel",
+  //         onPress: () => Alert.alert("Cancel Pressed"),
+  //         style: "cancel",
+  //       },
+  //     ],
+  //     {
+  //       cancelable: true,
+  //       onDismiss: async () => {
+  //         Alert.alert(
+  //           "This alert was dismissed by tapping outside of the alert dialog."
+  //         ),
+  //           await AsyncStorage.clear();
+  //         navigation.navigate("Login_washer");
+  //       },
+  //     }
+  //   );
+  const LogOut = async () => {
+    await AsyncStorage.removeItem("access_token");
+    navigation.navigate("Login_washer");
+  };
   return (
     <View style={styles.container}>
       <View style={styles.divProfile}>
@@ -12,7 +62,7 @@ export function Profile_washer({ navigation }) {
           <Image
             style={styles.imageprofile}
             source={{
-              uri: "https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_0.jpg",
+              uri: `${data.getUser.profileImg}`,
             }}
           />
         </View>
@@ -25,7 +75,7 @@ export function Profile_washer({ navigation }) {
             fontSize: 20,
           }}
         >
-          Asep
+          {data.getUser.name}
         </Text>
         <Text
           style={{
@@ -44,7 +94,13 @@ export function Profile_washer({ navigation }) {
           <Text style={styles.textBalance}>
             {"  "}Balance :{"  "}
           </Text>
-          <Text style={styles.textBalance}>Rp. 100.000,-</Text>
+          <Text style={styles.textBalance}>
+            Rp.{" "}
+            {data.getUser.balance
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+            ,-
+          </Text>
         </View>
         <View style={styles.LogOut}>
           {/* <Text>Logout</Text> */}
@@ -61,7 +117,7 @@ export function Profile_washer({ navigation }) {
             title="Log Out"
             buttonStyle={{ backgroundColor: "#DF4040" }}
             onPress={() => {
-              navigation.navigate("Login_washer");
+              LogOut();
             }}
           />
         </View>
