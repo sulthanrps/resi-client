@@ -45,24 +45,11 @@ export default function LookingWasher({navigation}){
       }
     })
 
-    // useFocusEffect(() => {
-    //   setInterval(() => {
-    //     refetch({
-    //       accessToken : accessToken
-    //     })
-    //   }, 10000)
-
-    //   console.log(data?.getBooksByBooksId)
-
-    //   if(data?.getBooksByBooksId?.WasherId){
-    //     navigation.navigate('BookTaken')
-    //   }
-    // })
-
     useFocusEffect(React.useCallback(() => {
       setInterval(() => {
         refetch({
-          accessToken : accessToken
+          accessToken : accessToken,
+          id: bookId
         })
       }, 10000)
 

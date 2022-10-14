@@ -47,7 +47,8 @@ export default function LookingWasher({navigation}){
   useFocusEffect(React.useCallback(() => {
     setInterval(() => {
       refetch({
-        accessToken : accessToken
+        accessToken : accessToken,
+        id: bookId
       })
     }, 10000)
 
@@ -221,6 +222,6 @@ const styles = StyleSheet.create({
       color : 'gray'
     },
     callBtn: {
-      marginLeft: '5%'
+      marginLeft: '42%'
     }
 });
