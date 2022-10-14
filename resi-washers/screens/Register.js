@@ -6,21 +6,36 @@ import {
   ScrollView,
   Keyboard,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { Input, Button, Icon } from "react-native-elements";
 import { useState } from "react";
-import { axios } from "axios";
+import { REGISTER } from "../queries";
+import { useMutation } from "@apollo/client";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const baseUrl = `https://service-user-resi.herokuapp.com/`;
 const width = Dimensions.get("screen").width;
 const height = Dimensions.get("screen").height;
 export function Register({ navigation }) {
+  // USEMutation
   const [inputs, setInputs] = useState({
     name: "",
     email: "",
     password: "",
     phoneNumber: "",
     profileImg: "",
+    role: "washer",
+  });
+  const [register, { loading, error, data }] = useMutation(REGISTER, {
+    onCompleted: async (data) => {
+      if (data) {
+        await AsyncStorage.setItem(
+          "access_token",
+          `${data.register.access_token}`
+        );
+        navigation.navigate("Home_washer");
+      }
+    },
   });
   const [hidePassword, setPassword] = useState(true);
   let [passIcon, setPassIcon] = useState("eye");
@@ -33,28 +48,28 @@ export function Register({ navigation }) {
       setPassIcon("eye");
     }
   };
-  const validate = () => {
-    // Keyboard.dismiss();
-    // if (!inputs.email) {
-    // }
+  // const validate = () => {
+  //   // Keyboard.dismiss();
+  //   // if (!inputs.email) {
+  //   // }
+  // };
 
-    axios
-      .post(`${baseUrl}/register`, inputs)
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
   const handleOnChange = (text, input) => {
     setInputs({
       ...inputs,
       [input]: text,
     });
-    // setInputs((prevState) => ({ ...prevState, [input]: text }));
   };
-  console.log(inputs);
+  const handleSubmit = () => {
+    register({
+      variables: inputs,
+    });
+    // navigation.navigate("Login_washer");
+  };
+  if (loading) {
+    return <ActivityIndicator />;
+  }
+  if (error) console.log(error);
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -70,7 +85,11 @@ export function Register({ navigation }) {
           </Text>
         </View>
         <View style={styles.inputName}>
-          <Input onChangeText={(text) => handleOnChange(text, "name")}></Input>
+          <Input
+            placeholder="example..."
+            leftIcon={{ type: "font-awesome", name: "user" }}
+            onChangeText={(text) => handleOnChange(text, "name")}
+          ></Input>
         </View>
         <View style={styles.labelEmail}>
           <Text
@@ -84,7 +103,11 @@ export function Register({ navigation }) {
           </Text>
         </View>
         <View style={styles.inputEmail}>
-          <Input onChangeText={(text) => handleOnChange(text, "email")}></Input>
+          <Input
+            onChangeText={(text) => handleOnChange(text, "email")}
+            placeholder="example@mail.com"
+            leftIcon={{ type: "font-awesome", name: "envelope" }}
+          ></Input>
         </View>
         <View style={styles.labelPassword}>
           <Text
@@ -100,6 +123,8 @@ export function Register({ navigation }) {
 
         <View style={styles.inputPassword}>
           <Input
+            placeholder="Password"
+            leftIcon={{ type: "font-awesome", name: "lock" }}
             rightIcon={
               <TouchableOpacity onPress={() => seePassword()}>
                 <Icon name={passIcon} type="entypo"></Icon>
@@ -123,6 +148,8 @@ export function Register({ navigation }) {
         </View>
         <View style={styles.inputPhoneNumber}>
           <Input
+            placeholder="08***"
+            leftIcon={{ type: "font-awesome", name: "phone" }}
             keyboardType="numeric"
             onChangeText={(text) => handleOnChange(text, "phoneNumber")}
           ></Input>
@@ -140,17 +167,24 @@ export function Register({ navigation }) {
         </View>
         <View style={styles.inputImgProfileUrl}>
           <Input
+            placeholder="http://example.com"
+            leftIcon={{ type: "font-awesome", name: "globe" }}
             onChangeText={(text) => handleOnChange(text, "profileImg")}
           ></Input>
         </View>
         <View style={styles.buttonRegister}>
-          <Button
-            title="Submit"
-            onPress={() => {
-              validate;
-              navigation.navigate("Home_washer");
-            }}
-          />
+          <Button title="Submit" onPress={handleSubmit} />
+        </View>
+        <View style={styles.textHaveAnAccount}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Login_washer")}
+            // style={styles.clickHere}
+          >
+            <Text>
+              Already have an account ? click here
+              {/* <Text style={styles.clickHere}> here</Text> */}
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
@@ -231,8 +265,24 @@ const styles = StyleSheet.create({
     marginHorizontal: 2,
   },
   buttonRegister: {
-    flex: 1,
+    // flex: 1,
+    height: 40,
     marginHorizontal: 10,
-    marginTop: 10,
+    backgroundColor: "blue",
+  },
+  textHaveAnAccount: {
+    // backgroundColor: "grey",
+    justifyContent: "center",
+    // alignItems: "center",
+    marginBottom: 10,
+    flexDirection: "row",
+    // marginTop: 5,
+  },
+  clickHere: {
+    backgroundColor: "red",
+    alignItems: "center",
+    justifyContent: "center",
+    // height: 30,
+    // marginTop: 50,
   },
 });

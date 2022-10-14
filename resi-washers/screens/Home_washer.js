@@ -6,21 +6,196 @@ import {
   Image,
   Pressable,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
-import { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
 import { Overlay, Button, Icon } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ReusableCard } from "./ReusableCard";
-import { locationPermission } from "../helpers/helperFunction";
+import { useMutation, useQuery } from "@apollo/client";
+import * as Location from "expo-location";
+import { useFocusEffect } from "@react-navigation/native";
+import {
+  GET_ORDER,
+  GET_ORDER_TAKEN,
+  CHANGE_STATUS,
+  GET_USER,
+  INPUT_WASHER_ID,
+} from "../queries";
 
 const width = Dimensions.get("screen").width;
 const height = Dimensions.get("screen").height;
 export function Home_washer({ navigation }) {
+  //GeoLocation
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [access_token, setAccess] = useState("");
   const [visible, setVisible] = useState(false);
+  const [visiblePendingOrder, setVisiblePendingOrder] = useState(true);
+  const {
+    loading: loadingOrder,
+    error: errorOrder,
+    data: dataOrder,
+    refetch: refetchOrder,
+  } = useQuery(GET_ORDER, {
+    variables: {
+      accessToken: access_token,
+      lon: `${location?.coords?.longitude || 0}`,
+      lat: `${location?.coords?.latitude || 0}`,
+      dist: 2,
+    },
+    onCompleted: () => {
+      console.log("masuk");
+    },
+  });
+  const [
+    washerPickBook,
+    {
+      loading: loadingInputWasher,
+      error: errorInputWasher,
+      data: dataInputWasher,
+    },
+  ] = useMutation(INPUT_WASHER_ID, {
+    variables: {
+      washerPickBook: dataOrder?.getWasherBooksPending[0]?.id,
+      accessToken: access_token,
+    },
+    onCompleted: async (data) => {
+      console.log(data, "dari complete");
+    },
+  });
+  const {
+    loading: loadingOrderTaken,
+    error: errorOrderTaken,
+    data: dataOrderTaken,
+    refetch: refetchOrderTaken,
+  } = useQuery(GET_ORDER_TAKEN, {
+    variables: {
+      accessToken: access_token,
+    },
+  });
+  const [
+    washerUpdateBook,
+    {
+      loading: loadingChangeStatus,
+      error: errorChangeStatus,
+      data: dataChangeStatus,
+    },
+  ] = useMutation(CHANGE_STATUS, {
+    variables: {
+      washerUpdateBookId: dataOrderTaken?.getWasherBooks[0]?.id,
+      accessToken: access_token,
+      status: "ongoing",
+    },
+  });
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+      // refetchOrder({
+      //   accessToken: access_token,
+      //   lon: location.coords.longitude,
+      //   lat: location.coords.latitude,
+      //   dist: 2,
+      // });
+    })();
+  }, []);
+
   const toggleOverlay = () => {
     setVisible(!visible);
   };
+  const toggleOverlayPendingOrder = () => {
+    setVisiblePendingOrder(!visiblePendingOrder);
+    washerPickBook({
+      variables: {
+        washerPickBookId: dataOrder?.getWasherBooksPending[0]?.id,
+        accessToken: access_token,
+      },
+    });
+  };
 
+  useEffect(() => {
+    AsyncStorage.getItem("access_token").then((res) => {
+      setAccess(res);
+    });
+  }, []);
+  const { loading, error, data } = useQuery(GET_USER, {
+    variables: { accessToken: access_token },
+  });
+  let text = "Waiting..";
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location);
+  }
+  useEffect(() => {
+    refetchOrderTaken({
+      accessToken: access_token,
+    });
+  }, [access_token]);
+  // useEffect(() => {
+  //   // setInterval(() => {
+  //   refetchOrder({
+  //     accessToken: access_token,
+  //   });
+  //   // }, 10000);
+  // }, [access_token]);
+  const changeStatus = async () => {
+    console.log(dataOrderTaken?.getWasherBooks[0]?.id, "dari button change");
+    console.log(access_token, "dari button");
+
+    washerUpdateBook({
+      variables: {
+        washerUpdateBookId: dataOrderTaken?.getWasherBooks[0]?.id,
+        accessToken: access_token,
+        status: "ongoing",
+      },
+    });
+    await AsyncStorage.setItem(
+      "id_book_ongoing",
+      `${dataOrderTaken?.getWasherBooks?.id}`
+    );
+    navigation.navigate("Washer_map");
+    console.log(dataChangeStatus, "dari change status");
+  };
+
+  console.log(dataOrder, "dari order");
+  // console.log(BookTaken[0]);
+  //Cek Order
+  if (loadingOrder) {
+    return <ActivityIndicator size="large" color="#00ff00" />;
+  }
+  if (errorOrder) console.log(error);
+  if (loading) {
+    return <ActivityIndicator size="large" color="#00ff00" />;
+  }
+  if (error) console.log(error);
+  if (!location) {
+    return <ActivityIndicator size="large" color="#00ff00" />;
+  }
+  if (loadingInputWasher) {
+    return <ActivityIndicator size="large" color="#00ff00" />;
+  }
+  if (errorInputWasher) console.log(error);
+  if (loadingOrderTaken) {
+    return <ActivityIndicator size="large" color="#00ff00" />;
+  }
+  if (errorOrderTaken) console.log(error, "dari order taken");
+  if (loadingChangeStatus) {
+    return <ActivityIndicator size="large" color="#00ff00" />;
+  }
+  if (errorChangeStatus) console.log(errorChangeStatus);
+  console.log(dataOrderTaken, "dari order taken");
+  const BookTaken = dataOrderTaken?.getWasherBooks?.filter(
+    (el) => el.status === "taken"
+  );
   return (
     <SafeAreaView>
       <ScrollView>
@@ -28,14 +203,16 @@ export function Home_washer({ navigation }) {
           <View style={styles.divNavigation}>
             <View style={styles.divNavigationLeft}>
               <Text style={styles.textNavigation}>Welcome Back,</Text>
-              <Text style={styles.textNavigationBottom}>Asep Gigi</Text>
+              <Text style={styles.textNavigationBottom}>
+                {data.getUser.name}
+              </Text>
             </View>
             <View style={styles.divNavigationRight}>
               <Pressable onPress={() => navigation.navigate("Profile_washer")}>
                 <Image
                   style={styles.imgNavigation}
                   source={{
-                    uri: "https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_0.jpg",
+                    uri: `${data.getUser.profileImg}`,
                   }}
                 />
               </Pressable>
@@ -74,7 +251,11 @@ export function Home_washer({ navigation }) {
                   marginLeft: 10,
                 }}
               >
-                Rp. 100.000,-
+                Rp.{" "}
+                {data.getUser.balance
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}{" "}
+                {" ,-"}
               </Text>
             </View>
           </View>
@@ -115,7 +296,7 @@ export function Home_washer({ navigation }) {
                     color: "#9F9F9F",
                   }}
                 >
-                  BMX Bike
+                  {dataOrderTaken.getWasherBooks[0].Bike.name}
                 </Text>
                 <Text
                   style={{
@@ -134,12 +315,18 @@ export function Home_washer({ navigation }) {
                     fontWeight: "bold",
                     fontSize: 14,
                     marginLeft: 3,
+                    marginBottom: 5,
                     color: "#9F9F9F",
                   }}
                 >
-                  Rp. 60.000,-
+                  Rp.{" "}
+                  {dataOrderTaken.getWasherBooks[0].GrandTotal.toString().replace(
+                    /\B(?=(\d{3})+(?!\d))/g,
+                    "."
+                  )}{" "}
+                  {" ,-"}
                 </Text>
-                <Text
+                {/* <Text
                   style={{
                     fontFamily: "Poppins_400Regular",
                     fontWeight: "bold",
@@ -161,7 +348,7 @@ export function Home_washer({ navigation }) {
                   }}
                 >
                   Jl. Sisingamangaraja
-                </Text>
+                </Text> */}
 
                 <Button
                   icon={
@@ -176,12 +363,12 @@ export function Home_washer({ navigation }) {
                   title="Start Driving"
                   onPress={() => {
                     toggleOverlay;
-                    // locationPermission();
-                    navigation.navigate("Washer_map");
+                    changeStatus();
                   }}
                 />
               </View>
             </Overlay>
+            {/* BOOK TAKEN */}
             <View style={styles.labelBook}>
               <Text
                 style={{
@@ -195,67 +382,179 @@ export function Home_washer({ navigation }) {
                 Book Taken
               </Text>
             </View>
-
-            <Pressable onPress={toggleOverlay}>
-              <View style={styles.divBookTaken}>
-                <View style={styles.ColumnBookTakenLeft}>
+            {!dataOrder && (
+              <Text style={styles.textbehindOrder}>
+                No Books Has Been Taken yet ..
+              </Text>
+            )}
+            {dataOrder?.getWasherBooksPending[0]?.WasherId === null && (
+              <Overlay
+                isVisible={visiblePendingOrder}
+                onBackdropPress={toggleOverlayPendingOrder}
+              >
+                <View style={styles.Overlay}>
+                  <View
+                    style={{ justifyContent: "center", alignItems: "center" }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: "Poppins_400Regular",
+                        fontWeight: "bold",
+                        fontSize: 20,
+                        marginLeft: 3,
+                      }}
+                    >
+                      Detail Order
+                    </Text>
+                  </View>
                   <Text
                     style={{
                       fontFamily: "Poppins_400Regular",
                       fontWeight: "bold",
                       fontSize: 20,
+                      marginLeft: 3,
+                      marginTop: 20,
                     }}
                   >
-                    BMX Bike
+                    Bike Type
                   </Text>
                   <Text
                     style={{
                       fontFamily: "Poppins_400Regular",
                       fontWeight: "bold",
                       fontSize: 14,
+                      marginLeft: 3,
                       color: "#9F9F9F",
                     }}
                   >
-                    Asep Gigi
+                    BMX
+                    {/* {dataOrder.getWasherBooksPending[0].Bike.name} */}
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: "Poppins_400Regular",
+                      fontWeight: "bold",
+                      fontSize: 20,
+                      marginLeft: 3,
+                      marginTop: 20,
+                    }}
+                  >
+                    Price
                   </Text>
                   <Text
                     style={{
                       fontFamily: "Poppins_400Regular",
                       fontWeight: "bold",
                       fontSize: 14,
+                      marginLeft: 3,
+                      marginBottom: 5,
                       color: "#9F9F9F",
                     }}
                   >
-                    Jalan. SIsingamangaraja
+                    Rp.{" "}
+                    {dataOrder.getWasherBooksPending[0].GrandTotal.toString().replace(
+                      /\B(?=(\d{3})+(?!\d))/g,
+                      "."
+                    )}{" "}
+                    {" ,-"}
                   </Text>
-                </View>
+                  {/* <Text
+                  style={{
+                    fontFamily: "Poppins_400Regular",
+                    fontWeight: "bold",
+                    fontSize: 20,
+                    marginLeft: 3,
+                    marginTop: 20,
+                  }}
+                >
+                  Location
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: "Poppins_400Regular",
+                    fontWeight: "bold",
+                    fontSize: 14,
+                    marginLeft: 3,
+                    color: "#9F9F9F",
+                    marginBottom: 10,
+                  }}
+                >
+                  Jl. Sisingamangaraja
+                </Text> */}
 
-                <View style={styles.ColumnBookTakenRight}>
-                  <Text
-                    style={{
-                      fontFamily: "Poppins_400Regular",
-                      fontWeight: "bold",
-                      fontSize: 14,
-                      marginLeft: 10,
-                      color: "#9F9F9F",
+                  <Button
+                    icon={
+                      <Icon
+                        name="check"
+                        type="font-awesome"
+                        color="white"
+                        size={25}
+                        iconStyle={{ marginRight: 10 }}
+                      />
+                    }
+                    title="Yes"
+                    onPress={() => {
+                      toggleOverlayPendingOrder();
+                      // locationPermission();
+                      // navigation.navigate("Washer_map");
                     }}
-                  >
-                    09-20-2022
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: "Poppins_400Regular",
-                      fontWeight: "bold",
-                      fontSize: 14,
-                      marginLeft: 10,
-                      color: "#9F9F9F",
-                    }}
-                  >
-                    10:00
-                  </Text>
+                  />
                 </View>
-              </View>
-            </Pressable>
+              </Overlay>
+            )}
+
+            {BookTaken[0].status === "taken" && (
+              <Pressable onPress={toggleOverlay}>
+                <View style={styles.divBookTaken}>
+                  <View style={styles.ColumnBookTakenLeft}>
+                    <Text
+                      style={{
+                        fontFamily: "Poppins_400Regular",
+                        fontWeight: "bold",
+                        fontSize: 20,
+                      }}
+                    >
+                      {BookTaken[0].Bike?.name}
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: "Poppins_400Regular",
+                        fontWeight: "bold",
+                        fontSize: 14,
+                        color: "#9F9F9F",
+                      }}
+                    >
+                      Val
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: "Poppins_400Regular",
+                        fontWeight: "bold",
+                        fontSize: 14,
+                        color: "#9F9F9F",
+                      }}
+                    >
+                      Jalan. Imam Bonjol
+                    </Text>
+                  </View>
+
+                  <View style={styles.ColumnBookTakenRight}>
+                    <Text
+                      style={{
+                        fontFamily: "Poppins_400Regular",
+                        fontWeight: "bold",
+                        fontSize: 14,
+                        marginLeft: 10,
+                        color: "#9F9F9F",
+                        textAlign: "right",
+                      }}
+                    >
+                      {BookTaken[0]?.BookDate}
+                    </Text>
+                  </View>
+                </View>
+              </Pressable>
+            )}
           </View>
           <View style={styles.HistoryContainer}>
             <View style={styles.labelBook}>
@@ -290,7 +589,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#FFFFFF",
-    elevation: 2,
+    // elevation: 1,
   },
   divNavigationLeft: {
     flexDirection: "column",
@@ -396,5 +695,9 @@ const styles = StyleSheet.create({
   Overlay: {
     backgroundColor: "#FFFFFF",
     width: 0.7 * width,
+  },
+  textbehindOrder: {
+    flex: 1,
+    marginHorizontal: 13,
   },
 });
